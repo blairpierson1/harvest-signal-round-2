@@ -223,6 +223,10 @@ export default function Dashboard() {
                 <span className="text-accent-cyan">Freightos</span>
               </p>
               <p>
+                Vessels:{" "}
+                <span className="text-accent-cyan">Simulated AIS</span>
+              </p>
+              <p>
                 News:{" "}
                 <span className="text-accent-cyan">NewsAPI</span>
               </p>

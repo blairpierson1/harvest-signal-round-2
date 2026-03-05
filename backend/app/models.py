@@ -81,6 +81,24 @@ class ShippingRate(BaseModel):
     source: str = "freightos"
 
 
+class Vessel(BaseModel):
+    name: str
+    mmsi: str
+    imo: str | None = None
+    vessel_type: str
+    cargo: str
+    latitude: float
+    longitude: float
+    speed_knots: float
+    heading: float
+    status: str
+    destination_port: str
+    origin_port: str
+    eta: str | None = None
+    route_coords: list[list[float]] = []
+    source: str = "simulated"
+
+
 class CommoditySignal(BaseModel):
     commodity: str
     signal: Signal
@@ -96,6 +114,7 @@ class CommoditySignal(BaseModel):
         label="N/A", description="Insufficient data"
     )
     shipping: ShippingRate | None = None
+    vessels: list[Vessel] = []
     last_updated: str
 
 

@@ -20,6 +20,7 @@ from app.prices import fetch_all_prices, fetch_all_price_histories
 from app.producers import fetch_all_producers
 from app.shipping import fetch_all_shipping
 from app.signals import analyze_region, generate_commodity_signal, generate_condition_summary
+from app.vessels import fetch_all_vessels
 from app.weather import get_all_weather
 
 logger = logging.getLogger(__name__)
@@ -45,6 +46,7 @@ async def get_signals(request: Request, _auth: None = Depends(verify_api_key)):
             producer_data,
             news_data,
             shipping_data,
+            vessel_data,
         ) = await asyncio.gather(
             get_all_weather(),
             fetch_all_prices(),
@@ -52,6 +54,7 @@ async def get_signals(request: Request, _auth: None = Depends(verify_api_key)):
             fetch_all_producers(),
             fetch_all_news(),
             fetch_all_shipping(),
+            fetch_all_vessels(),
         )
 
         signals = []
@@ -98,6 +101,7 @@ async def get_signals(request: Request, _auth: None = Depends(verify_api_key)):
                 news=news_data.get(commodity, []),
                 forecast=forecast,
                 shipping=shipping_data.get(commodity),
+                vessels=vessel_data.get(commodity, []),
                 last_updated=datetime.now(timezone.utc).isoformat(),
             )
             signals.append(commodity_signal)
