@@ -75,24 +75,12 @@ export default function MapView({ signals }: MapViewProps) {
       const map = mapInstanceRef.current;
       if (!map) return;
 
-      // Clear existing markers
+      // Clear all non-tile layers (markers, polylines, port markers)
       map.eachLayer((layer: L.Layer) => {
-        if ((layer as L.CircleMarker).getRadius) {
+        if (!(layer instanceof L.TileLayer)) {
           map.removeLayer(layer);
         }
       });
-
-      // Re-add tile layer if it was removed
-      let hasTile = false;
-      map.eachLayer((layer: L.Layer) => {
-        if (layer instanceof L.TileLayer) hasTile = true;
-      });
-      if (!hasTile) {
-        L.tileLayer(DARK_TILE_URL, {
-          subdomains: "abcd",
-          maxZoom: 19,
-        }).addTo(map);
-      }
 
       // Add region markers for each commodity
       for (const sig of signals) {
