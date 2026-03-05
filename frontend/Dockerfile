@@ -14,8 +14,7 @@ RUN npm run build
 FROM node:18-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./
+RUN npm install -g serve
+COPY --from=builder /app/out ./out
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["serve", "out", "-l", "3000"]

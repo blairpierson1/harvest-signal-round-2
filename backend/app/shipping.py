@@ -17,47 +17,47 @@ FREIGHTOS_BASE_URL = "https://ship.freightos.com/api/shippingCalculator"
 
 # Primary export routes for each commodity (origin port -> destination port)
 SHIPPING_ROUTES: dict[str, dict[str, str]] = {
-    "Coffee": {
-        "route": "Santos to New York",
-        "origin": "Santos,Brazil",
-        "origin_port": "BRSSZ",
-        "destination": "NewYork,NY",
-        "destination_port": "USNYC",
-    },
-    "Sugar": {
-        "route": "Santos to Rotterdam",
-        "origin": "Santos,Brazil",
-        "origin_port": "BRSSZ",
+    "Pistachios": {
+        "route": "Bandar Abbas to Rotterdam",
+        "origin": "BandarAbbas,Iran",
+        "origin_port": "IRBND",
         "destination": "Rotterdam,Netherlands",
         "destination_port": "NLRTM",
     },
-    "Cocoa": {
-        "route": "Abidjan to Rotterdam",
-        "origin": "Abidjan,IvoryCoast",
-        "origin_port": "CIABJ",
+    "Dates": {
+        "route": "Jeddah to Rotterdam",
+        "origin": "Jeddah,SaudiArabia",
+        "origin_port": "SAJED",
         "destination": "Rotterdam,Netherlands",
         "destination_port": "NLRTM",
     },
-    "Orange Juice": {
-        "route": "Santos to Rotterdam",
-        "origin": "Santos,Brazil",
-        "origin_port": "BRSSZ",
-        "destination": "Rotterdam,Netherlands",
-        "destination_port": "NLRTM",
+    "Saffron": {
+        "route": "Bandar Abbas to Dubai",
+        "origin": "BandarAbbas,Iran",
+        "origin_port": "IRBND",
+        "destination": "Dubai,UAE",
+        "destination_port": "AEJEA",
     },
-    "Lumber": {
-        "route": "Vancouver to Shanghai",
-        "origin": "Vancouver,Canada",
-        "origin_port": "CAVAN",
+    "Cotton": {
+        "route": "Mersin to Shanghai",
+        "origin": "Mersin,Turkey",
+        "origin_port": "TRMER",
         "destination": "Shanghai,China",
         "destination_port": "CNSHA",
     },
-    "Palm Oil": {
-        "route": "Belawan to Rotterdam",
-        "origin": "Medan,Indonesia",
-        "origin_port": "IDBLW",
+    "Hazelnuts": {
+        "route": "Trabzon to Rotterdam",
+        "origin": "Trabzon,Turkey",
+        "origin_port": "TRTRB",
         "destination": "Rotterdam,Netherlands",
         "destination_port": "NLRTM",
+    },
+    "Olive Oil": {
+        "route": "Izmir to New York",
+        "origin": "Izmir,Turkey",
+        "origin_port": "TRIZM",
+        "destination": "NewYork,NY",
+        "destination_port": "USNYC",
     },
 }
 
