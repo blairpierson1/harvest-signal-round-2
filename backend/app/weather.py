@@ -8,57 +8,57 @@ import httpx
 
 logger = logging.getLogger(__name__)
 
-# Growing region coordinates for all six commodities
+# Growing region coordinates for all six Middle East commodities
 COMMODITY_REGIONS: dict[str, list[dict]] = {
-    "Coffee": [
-        {"region_name": "Minas Gerais", "country": "Brazil", "latitude": -18.51, "longitude": -44.55},
-        {"region_name": "Sao Paulo State", "country": "Brazil", "latitude": -22.19, "longitude": -48.79},
-        {"region_name": "Central Highlands", "country": "Vietnam", "latitude": 14.35, "longitude": 108.00},
+    "Pistachios": [
+        {"region_name": "Kerman Province", "country": "Iran", "latitude": 30.28, "longitude": 57.08},
+        {"region_name": "Gaziantep", "country": "Turkey", "latitude": 37.07, "longitude": 37.38},
+        {"region_name": "San Joaquin Valley", "country": "USA", "latitude": 36.60, "longitude": -119.80},
     ],
-    "Sugar": [
-        {"region_name": "Sao Paulo State", "country": "Brazil", "latitude": -22.19, "longitude": -48.79},
-        {"region_name": "Ribeirao Preto", "country": "Brazil", "latitude": -21.18, "longitude": -47.81},
-        {"region_name": "Uttar Pradesh", "country": "India", "latitude": 27.18, "longitude": 80.35},
+    "Dates": [
+        {"region_name": "Medina Region", "country": "Saudi Arabia", "latitude": 24.47, "longitude": 39.61},
+        {"region_name": "Basra Province", "country": "Iraq", "latitude": 30.51, "longitude": 47.81},
+        {"region_name": "Siwa Oasis", "country": "Egypt", "latitude": 29.20, "longitude": 25.52},
     ],
-    "Cocoa": [
-        {"region_name": "Ashanti Region", "country": "Ghana", "latitude": 6.75, "longitude": -1.52},
-        {"region_name": "Western Region", "country": "Ghana", "latitude": 5.50, "longitude": -2.50},
-        {"region_name": "Bas-Sassandra", "country": "Ivory Coast", "latitude": 5.28, "longitude": -6.58},
+    "Saffron": [
+        {"region_name": "Khorasan Province", "country": "Iran", "latitude": 34.30, "longitude": 58.80},
+        {"region_name": "Herat Province", "country": "Afghanistan", "latitude": 34.35, "longitude": 62.20},
+        {"region_name": "Kashmir Valley", "country": "India", "latitude": 34.08, "longitude": 74.80},
     ],
-    "Orange Juice": [
-        {"region_name": "Central Florida", "country": "USA", "latitude": 28.54, "longitude": -81.38},
-        {"region_name": "Sao Paulo State", "country": "Brazil", "latitude": -22.19, "longitude": -48.79},
-        {"region_name": "Veracruz", "country": "Mexico", "latitude": 19.17, "longitude": -96.13},
+    "Cotton": [
+        {"region_name": "Southeastern Anatolia", "country": "Turkey", "latitude": 37.16, "longitude": 38.79},
+        {"region_name": "Nile Delta", "country": "Egypt", "latitude": 30.90, "longitude": 31.20},
+        {"region_name": "Sindh Province", "country": "Pakistan", "latitude": 25.38, "longitude": 68.37},
     ],
-    "Lumber": [
-        {"region_name": "Pacific Northwest", "country": "USA", "latitude": 47.61, "longitude": -122.33},
-        {"region_name": "British Columbia", "country": "Canada", "latitude": 49.28, "longitude": -123.12},
-        {"region_name": "Southeast USA", "country": "USA", "latitude": 33.75, "longitude": -84.39},
+    "Hazelnuts": [
+        {"region_name": "Black Sea Coast", "country": "Turkey", "latitude": 41.00, "longitude": 39.72},
+        {"region_name": "Piemonte", "country": "Italy", "latitude": 44.69, "longitude": 8.04},
+        {"region_name": "Sheki-Zagatala", "country": "Azerbaijan", "latitude": 41.19, "longitude": 47.17},
     ],
-    "Palm Oil": [
-        {"region_name": "Riau Province", "country": "Indonesia", "latitude": 0.51, "longitude": 101.45},
-        {"region_name": "North Sumatra", "country": "Indonesia", "latitude": 3.59, "longitude": 98.67},
-        {"region_name": "Sabah", "country": "Malaysia", "latitude": 5.98, "longitude": 116.07},
+    "Olive Oil": [
+        {"region_name": "Aegean Coast", "country": "Turkey", "latitude": 38.42, "longitude": 27.14},
+        {"region_name": "Sfax Governorate", "country": "Tunisia", "latitude": 34.74, "longitude": 10.76},
+        {"region_name": "Latakia", "country": "Syria", "latitude": 35.52, "longitude": 35.79},
     ],
 }
 
 # Typical monthly averages for reference (simplified baselines)
 BASELINE_TEMP: dict[str, dict[str, float]] = {
-    "Coffee": {"Brazil": 23.0, "Vietnam": 24.0},
-    "Sugar": {"Brazil": 24.0, "India": 28.0},
-    "Cocoa": {"Ghana": 27.0, "Ivory Coast": 27.0},
-    "Orange Juice": {"USA": 24.0, "Brazil": 24.0, "Mexico": 25.0},
-    "Lumber": {"USA": 12.0, "Canada": 10.0},
-    "Palm Oil": {"Indonesia": 27.0, "Malaysia": 27.0},
+    "Pistachios": {"Iran": 28.0, "Turkey": 22.0, "USA": 25.0},
+    "Dates": {"Saudi Arabia": 35.0, "Iraq": 33.0, "Egypt": 30.0},
+    "Saffron": {"Iran": 20.0, "Afghanistan": 18.0, "India": 16.0},
+    "Cotton": {"Turkey": 28.0, "Egypt": 30.0, "Pakistan": 32.0},
+    "Hazelnuts": {"Turkey": 18.0, "Italy": 16.0, "Azerbaijan": 17.0},
+    "Olive Oil": {"Turkey": 22.0, "Tunisia": 25.0, "Syria": 24.0},
 }
 
 BASELINE_PRECIP: dict[str, dict[str, float]] = {
-    "Coffee": {"Brazil": 5.0, "Vietnam": 6.0},
-    "Sugar": {"Brazil": 4.5, "India": 3.0},
-    "Cocoa": {"Ghana": 5.5, "Ivory Coast": 6.0},
-    "Orange Juice": {"USA": 5.0, "Brazil": 4.5, "Mexico": 4.0},
-    "Lumber": {"USA": 4.0, "Canada": 3.5},
-    "Palm Oil": {"Indonesia": 7.0, "Malaysia": 7.0},
+    "Pistachios": {"Iran": 0.5, "Turkey": 1.5, "USA": 0.3},
+    "Dates": {"Saudi Arabia": 0.2, "Iraq": 0.3, "Egypt": 0.1},
+    "Saffron": {"Iran": 1.0, "Afghanistan": 0.8, "India": 2.0},
+    "Cotton": {"Turkey": 1.5, "Egypt": 0.2, "Pakistan": 1.0},
+    "Hazelnuts": {"Turkey": 4.0, "Italy": 3.0, "Azerbaijan": 2.5},
+    "Olive Oil": {"Turkey": 2.0, "Tunisia": 1.0, "Syria": 1.5},
 }
 
 

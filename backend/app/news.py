@@ -14,12 +14,12 @@ NEWSAPI_BASE_URL = "https://newsapi.org/v2/everything"
 
 # Search keywords per commodity
 COMMODITY_KEYWORDS: dict[str, str] = {
-    "Coffee": "coffee commodity price",
-    "Sugar": "sugar commodity price",
-    "Cocoa": "cocoa commodity price",
-    "Orange Juice": "orange juice commodity price",
-    "Lumber": "lumber timber commodity price",
-    "Palm Oil": "palm oil commodity price",
+    "Pistachios": "pistachio commodity price Iran",
+    "Dates": "dates commodity Middle East price",
+    "Saffron": "saffron commodity price Iran",
+    "Cotton": "cotton commodity price Egypt Turkey",
+    "Hazelnuts": "hazelnut commodity price Turkey",
+    "Olive Oil": "olive oil commodity price Mediterranean",
 }
 
 

@@ -16,14 +16,16 @@ logger = logging.getLogger(__name__)
 
 YAHOO_FINANCE_BASE_URL = "https://query1.finance.yahoo.com/v8/finance/chart"
 
-# Yahoo Finance symbols for all tracked commodities
+# Yahoo Finance symbols for tracked commodities.
+# Most Middle East commodities lack direct futures tickers on Yahoo Finance;
+# only Cotton (CT=F) has a liquid futures contract. Others use estimated prices.
 COMMODITY_CONFIG: dict[str, dict[str, str]] = {
-    "Coffee": {"symbol": "KC=F"},
-    "Sugar": {"symbol": "SB=F"},
-    "Cocoa": {"symbol": "CC=F"},
-    "Orange Juice": {"symbol": "OJ=F"},
-    "Lumber": {"symbol": "LBS=F"},
-    "Palm Oil": {"symbol": "ZL=F"},
+    "Pistachios": {},
+    "Dates": {},
+    "Saffron": {},
+    "Cotton": {"symbol": "CT=F"},
+    "Hazelnuts": {},
+    "Olive Oil": {},
 }
 
 
@@ -73,22 +75,26 @@ async def _fetch_yahoo_price(commodity: str, config: dict[str, str]) -> PriceTre
 
 
 async def fetch_price_trend(commodity: str) -> PriceTrend:
-    """Fetch current price trend for a commodity from Yahoo Finance."""
+    """Fetch current price trend for a commodity from Yahoo Finance.
+
+    Commodities without a ``symbol`` in COMMODITY_CONFIG fall back to
+    estimated prices (most Middle East commodities lack futures tickers).
+    """
     config = COMMODITY_CONFIG.get(commodity)
-    if not config:
-        return PriceTrend()
+    if not config or "symbol" not in config:
+        return _get_estimated_price(commodity)
     return await _fetch_yahoo_price(commodity, config)
 
 
 def _get_estimated_price(commodity: str) -> PriceTrend:
     """Return estimated commodity prices as fallback when Yahoo Finance fails."""
     estimates: dict[str, PriceTrend] = {
-        "Coffee": PriceTrend(current_price=365.00, change_percent=0.0, direction="flat", source="estimated"),
-        "Sugar": PriceTrend(current_price=14.00, change_percent=0.0, direction="flat", source="estimated"),
-        "Cocoa": PriceTrend(current_price=3050.00, change_percent=0.0, direction="flat", source="estimated"),
-        "Orange Juice": PriceTrend(current_price=450.00, change_percent=0.0, direction="flat", source="estimated"),
-        "Lumber": PriceTrend(current_price=550.00, change_percent=0.0, direction="flat", source="estimated"),
-        "Palm Oil": PriceTrend(current_price=45.00, change_percent=0.0, direction="flat", source="estimated"),
+        "Pistachios": PriceTrend(current_price=5.50, change_percent=0.0, direction="flat", source="estimated"),
+        "Dates": PriceTrend(current_price=2.50, change_percent=0.0, direction="flat", source="estimated"),
+        "Saffron": PriceTrend(current_price=1500.00, change_percent=0.0, direction="flat", source="estimated"),
+        "Cotton": PriceTrend(current_price=85.00, change_percent=0.0, direction="flat", source="estimated"),
+        "Hazelnuts": PriceTrend(current_price=6.00, change_percent=0.0, direction="flat", source="estimated"),
+        "Olive Oil": PriceTrend(current_price=8.50, change_percent=0.0, direction="flat", source="estimated"),
     }
     return estimates.get(commodity, PriceTrend())
 
@@ -125,7 +131,7 @@ def _compute_trend_label(points: list[PriceHistoryPoint]) -> str:
 async def fetch_price_history(commodity: str) -> PriceHistory:
     """Fetch 30-day price history from Yahoo Finance for sparkline chart."""
     config = COMMODITY_CONFIG.get(commodity)
-    if not config:
+    if not config or "symbol" not in config:
         return PriceHistory()
 
     symbol = config["symbol"]

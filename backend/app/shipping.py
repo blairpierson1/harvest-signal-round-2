@@ -17,58 +17,60 @@ FREIGHTOS_BASE_URL = "https://ship.freightos.com/api/shippingCalculator"
 
 # Port coordinates for mapping shipping lanes
 PORT_COORDINATES: dict[str, tuple[float, float]] = {
-    "BRSSZ": (-23.96, -46.33),   # Santos, Brazil
-    "USNYC": (40.69, -74.04),    # New York, USA
+    "IRBND": (27.19, 56.28),     # Bandar Abbas, Iran
     "NLRTM": (51.92, 4.48),      # Rotterdam, Netherlands
-    "CIABJ": (5.36, -4.01),      # Abidjan, Ivory Coast
-    "CAVAN": (49.28, -123.12),   # Vancouver, Canada
+    "SAJED": (21.49, 39.19),     # Jeddah, Saudi Arabia
+    "AEJEA": (25.27, 55.29),     # Jebel Ali (Dubai), UAE
+    "TRMER": (36.80, 34.63),     # Mersin, Turkey
     "CNSHA": (31.23, 121.47),    # Shanghai, China
-    "IDBLW": (3.78, 98.68),      # Belawan, Indonesia
+    "TRTRB": (41.00, 39.72),     # Trabzon, Turkey
+    "TRIZM": (38.42, 27.14),     # Izmir, Turkey
+    "USNYC": (40.69, -74.04),    # New York, USA
 }
 
 # Primary export routes for each commodity (origin port -> destination port)
 SHIPPING_ROUTES: dict[str, dict[str, str]] = {
-    "Coffee": {
-        "route": "Santos to New York",
-        "origin": "Santos,Brazil",
-        "origin_port": "BRSSZ",
-        "destination": "NewYork,NY",
-        "destination_port": "USNYC",
-    },
-    "Sugar": {
-        "route": "Santos to Rotterdam",
-        "origin": "Santos,Brazil",
-        "origin_port": "BRSSZ",
+    "Pistachios": {
+        "route": "Bandar Abbas to Rotterdam",
+        "origin": "BandarAbbas,Iran",
+        "origin_port": "IRBND",
         "destination": "Rotterdam,Netherlands",
         "destination_port": "NLRTM",
     },
-    "Cocoa": {
-        "route": "Abidjan to Rotterdam",
-        "origin": "Abidjan,IvoryCoast",
-        "origin_port": "CIABJ",
+    "Dates": {
+        "route": "Jeddah to Rotterdam",
+        "origin": "Jeddah,SaudiArabia",
+        "origin_port": "SAJED",
         "destination": "Rotterdam,Netherlands",
         "destination_port": "NLRTM",
     },
-    "Orange Juice": {
-        "route": "Santos to Rotterdam",
-        "origin": "Santos,Brazil",
-        "origin_port": "BRSSZ",
-        "destination": "Rotterdam,Netherlands",
-        "destination_port": "NLRTM",
+    "Saffron": {
+        "route": "Bandar Abbas to Dubai",
+        "origin": "BandarAbbas,Iran",
+        "origin_port": "IRBND",
+        "destination": "Dubai,UAE",
+        "destination_port": "AEJEA",
     },
-    "Lumber": {
-        "route": "Vancouver to Shanghai",
-        "origin": "Vancouver,Canada",
-        "origin_port": "CAVAN",
+    "Cotton": {
+        "route": "Mersin to Shanghai",
+        "origin": "Mersin,Turkey",
+        "origin_port": "TRMER",
         "destination": "Shanghai,China",
         "destination_port": "CNSHA",
     },
-    "Palm Oil": {
-        "route": "Belawan to Rotterdam",
-        "origin": "Medan,Indonesia",
-        "origin_port": "IDBLW",
+    "Hazelnuts": {
+        "route": "Trabzon to Rotterdam",
+        "origin": "Trabzon,Turkey",
+        "origin_port": "TRTRB",
         "destination": "Rotterdam,Netherlands",
         "destination_port": "NLRTM",
+    },
+    "Olive Oil": {
+        "route": "Izmir to New York",
+        "origin": "Izmir,Turkey",
+        "origin_port": "TRIZM",
+        "destination": "NewYork,NY",
+        "destination_port": "USNYC",
     },
 }
 

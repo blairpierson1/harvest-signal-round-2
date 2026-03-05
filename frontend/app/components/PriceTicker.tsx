@@ -8,12 +8,12 @@ interface PriceTickerProps {
 }
 
 const commodityUnits: Record<string, string> = {
-  Coffee: "\u00a2/lb",
-  Sugar: "\u00a2/lb",
-  Cocoa: "$/ton",
-  "Orange Juice": "\u00a2/lb",
-  Lumber: "$/mbf",
-  "Palm Oil": "\u00a2/lb",
+  Pistachios: "$/lb",
+  Dates: "$/lb",
+  Saffron: "$/oz",
+  Cotton: "\u00a2/lb",
+  Hazelnuts: "$/lb",
+  "Olive Oil": "$/L",
 };
 
 export default function PriceTicker({ trend, commodity }: PriceTickerProps) {
