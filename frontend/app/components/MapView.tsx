@@ -31,6 +31,8 @@ export default function MapView({ signals }: MapViewProps) {
   const [ready, setReady] = useState(false);
   const [showVessels, setShowVessels] = useState(true);
   const [showRegions, setShowRegions] = useState(true);
+  const showVesselsRef = useRef(true);
+  const showRegionsRef = useRef(true);
   const vesselLayerRef = useRef<L.LayerGroup | null>(null);
   const regionLayerRef = useRef<L.LayerGroup | null>(null);
 
@@ -249,17 +251,17 @@ export default function MapView({ signals }: MapViewProps) {
       regionLayerRef.current = regionGroup;
       vesselLayerRef.current = vesselGroup;
 
-      // Add layers based on toggle state
-      if (showRegions) regionGroup.addTo(map);
-      if (showVessels) vesselGroup.addTo(map);
+      // Add layers based on current toggle state (read from refs to avoid stale closure)
+      if (showRegionsRef.current) regionGroup.addTo(map);
+      if (showVesselsRef.current) vesselGroup.addTo(map);
     }
 
     addMarkers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signals, ready]);
 
-  // Toggle region layer visibility
+  // Keep refs in sync and toggle region layer visibility
   useEffect(() => {
+    showRegionsRef.current = showRegions;
     const map = mapInstanceRef.current;
     if (!map || !regionLayerRef.current) return;
     if (showRegions) {
@@ -269,8 +271,9 @@ export default function MapView({ signals }: MapViewProps) {
     }
   }, [showRegions]);
 
-  // Toggle vessel layer visibility
+  // Keep refs in sync and toggle vessel layer visibility
   useEffect(() => {
+    showVesselsRef.current = showVessels;
     const map = mapInstanceRef.current;
     if (!map || !vesselLayerRef.current) return;
     if (showVessels) {
