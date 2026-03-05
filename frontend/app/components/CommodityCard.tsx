@@ -114,6 +114,45 @@ export default function CommodityCard({ data }: CommodityCardProps) {
           </div>
         )}
 
+        {/* Active Vessels */}
+        {data.vessels && data.vessels.length > 0 && (
+          <div className="mb-3">
+            <span className="text-xs text-text-muted uppercase tracking-widest block mb-2">
+              Vessels in Transit ({data.vessels.length})
+            </span>
+            <div className="space-y-1.5">
+              {data.vessels.map((vessel, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between rounded-md bg-navy-900/40 px-3 py-1.5 border border-navy-700/30"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs">&#x1F6A2;</span>
+                    <div>
+                      <span className="text-[11px] font-medium text-text-secondary">
+                        {vessel.name}
+                      </span>
+                      <span className="text-[10px] text-text-muted ml-2">
+                        {vessel.speed_knots} kn &bull; {vessel.heading.toFixed(0)}&deg;
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[10px] text-accent-cyan">
+                      {vessel.origin_port} &rarr; {vessel.destination_port}
+                    </span>
+                    {vessel.eta && (
+                      <span className="text-[10px] text-text-muted block">
+                        ETA: {vessel.eta}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* News Headlines */}
         {data.news && data.news.length > 0 && (
           <div className="mb-3">

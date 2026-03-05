@@ -63,6 +63,24 @@ export interface ShippingRate {
   source: string;
 }
 
+export interface Vessel {
+  name: string;
+  mmsi: string;
+  imo: string | null;
+  vessel_type: string;
+  cargo: string;
+  latitude: number;
+  longitude: number;
+  speed_knots: number;
+  heading: number;
+  status: string;
+  destination_port: string;
+  origin_port: string;
+  eta: string | null;
+  route_coords: number[][];
+  source: string;
+}
+
 export interface CommoditySignal {
   commodity: string;
   signal: Signal;
@@ -76,6 +94,7 @@ export interface CommoditySignal {
   news: NewsHeadline[];
   forecast: ForecastDirection;
   shipping: ShippingRate | null;
+  vessels: Vessel[];
   last_updated: string;
 }
 
