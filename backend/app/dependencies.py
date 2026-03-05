@@ -1,5 +1,6 @@
 """Shared dependencies: authentication, rate limiting, and configuration."""
 
+import hmac
 import logging
 import os
 
@@ -44,7 +45,7 @@ async def verify_api_key(
         if auth_header.startswith("Bearer "):
             key = auth_header[len("Bearer "):]
 
-    if key != API_KEY:
+    if not key or not hmac.compare_digest(key, API_KEY):
         raise StarletteHTTPException(status_code=401, detail="Invalid or missing API key")
 
 
