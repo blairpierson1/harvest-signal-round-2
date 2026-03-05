@@ -15,6 +15,17 @@ logger = logging.getLogger(__name__)
 
 FREIGHTOS_BASE_URL = "https://ship.freightos.com/api/shippingCalculator"
 
+# Port coordinates for mapping shipping lanes
+PORT_COORDINATES: dict[str, tuple[float, float]] = {
+    "BRSSZ": (-23.96, -46.33),   # Santos, Brazil
+    "USNYC": (40.69, -74.04),    # New York, USA
+    "NLRTM": (51.92, 4.48),      # Rotterdam, Netherlands
+    "CIABJ": (5.36, -4.01),      # Abidjan, Ivory Coast
+    "CAVAN": (49.28, -123.12),   # Vancouver, Canada
+    "CNSHA": (31.23, 121.47),    # Shanghai, China
+    "IDBLW": (3.78, 98.68),      # Belawan, Indonesia
+}
+
 # Primary export routes for each commodity (origin port -> destination port)
 SHIPPING_ROUTES: dict[str, dict[str, str]] = {
     "Coffee": {
@@ -89,10 +100,17 @@ async def _fetch_shipping_rate(commodity: str, route_config: dict[str, str]) -> 
             elif price_from is not None:
                 rate_usd = round(float(price_from), 2)
 
+        origin_coords = PORT_COORDINATES.get(route_config["origin_port"])
+        dest_coords = PORT_COORDINATES.get(route_config["destination_port"])
+
         return ShippingRate(
             route=route_config["route"],
             origin_port=route_config["origin_port"],
             destination_port=route_config["destination_port"],
+            origin_lat=origin_coords[0] if origin_coords else None,
+            origin_lon=origin_coords[1] if origin_coords else None,
+            destination_lat=dest_coords[0] if dest_coords else None,
+            destination_lon=dest_coords[1] if dest_coords else None,
             rate_usd=rate_usd,
             container_type="40ft",
             source="freightos",
@@ -100,10 +118,17 @@ async def _fetch_shipping_rate(commodity: str, route_config: dict[str, str]) -> 
 
     except Exception:
         logger.exception("Failed to fetch shipping rate for %s", commodity)
+        origin_coords = PORT_COORDINATES.get(route_config["origin_port"])
+        dest_coords = PORT_COORDINATES.get(route_config["destination_port"])
+
         return ShippingRate(
             route=route_config["route"],
             origin_port=route_config["origin_port"],
             destination_port=route_config["destination_port"],
+            origin_lat=origin_coords[0] if origin_coords else None,
+            origin_lon=origin_coords[1] if origin_coords else None,
+            destination_lat=dest_coords[0] if dest_coords else None,
+            destination_lon=dest_coords[1] if dest_coords else None,
             rate_usd=None,
             container_type="40ft",
             source="freightos",
