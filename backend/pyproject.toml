@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "harvest-signal-backend"
+version = "0.1.0"
+description = "Harvest Signal - Soft Commodity Weather Signal Dashboard Backend"
+authors = ["Devin"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = {extras = ["standard"], version = "^0.133.0"}
+httpx = "^0.27.0"
+pydantic = "^2.0.0"
+python-dotenv = "^1.2.1"
+slowapi = "^0.1.9"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+pytest-asyncio = "^0.24.0"
+httpx = "^0.27.0"
+ruff = "^0.8.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
