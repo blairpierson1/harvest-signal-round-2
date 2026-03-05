@@ -13,12 +13,12 @@ Harvest Signal monitors weather conditions across major commodity-producing regi
 
 | Commodity | Ticker | Growing Regions | Top Producers |
 |-----------|--------|-----------------|---------------|
-| Coffee | KC=F | Brazil, Vietnam | Brazil, Vietnam, Colombia, Indonesia, Ethiopia |
-| Sugar | SB=F | Brazil, India | Brazil, India, Thailand, China, Pakistan |
-| Cocoa | CC=F | Ghana, Ivory Coast | Ivory Coast, Ghana, Indonesia, Nigeria, Ecuador |
-| Orange Juice | OJ=F | Florida, Brazil, Mexico, Spain | Brazil, USA, Mexico, Spain, Italy |
-| Lumber | LBS=F | Pacific NW, Canada, SE USA, Scandinavia | USA, Canada, Russia, Sweden, Finland |
-| Palm Oil | FCPO | Sumatra, Borneo, Sabah, Riau | Indonesia, Malaysia, Thailand, Colombia, Nigeria |
+| Pistachios | N/A (estimated) | Kerman (Iran), Gaziantep (Turkey), San Joaquin Valley (USA) | Iran, USA, Turkey, China, Syria |
+| Dates | N/A (estimated) | Medina (Saudi Arabia), Basra (Iraq), Siwa (Egypt) | Egypt, Saudi Arabia, Iran, Algeria, Iraq |
+| Saffron | N/A (estimated) | Khorasan (Iran), Herat (Afghanistan), Kashmir (India) | Iran, India, Afghanistan, Spain, Morocco |
+| Cotton | CT=F | SE Anatolia (Turkey), Nile Delta (Egypt), Sindh (Pakistan) | Turkey, Egypt, Pakistan, India, Uzbekistan |
+| Hazelnuts | N/A (estimated) | Black Sea (Turkey), Piemonte (Italy), Sheki (Azerbaijan) | Turkey, Italy, Azerbaijan, USA, Georgia |
+| Olive Oil | N/A (estimated) | Aegean (Turkey), Sfax (Tunisia), Latakia (Syria) | Turkey, Tunisia, Syria, Morocco, Jordan |
 
 ## Signal Logic
 
