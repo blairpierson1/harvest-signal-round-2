@@ -15,7 +15,9 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # CORS
 # ---------------------------------------------------------------------------
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+_default_origins = "*" if os.getenv("FLY_APP_NAME") else "http://localhost:3000"
+_origins_raw = os.getenv("ALLOWED_ORIGINS", _default_origins)
+ALLOWED_ORIGINS = ["*"] if _origins_raw == "*" else _origins_raw.split(",")
 
 # ---------------------------------------------------------------------------
 # API-key authentication (optional – skipped when API_KEY is not set)
