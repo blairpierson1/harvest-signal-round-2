@@ -58,12 +58,12 @@ PRODUCER_CONFIG: dict[str, list[dict]] = {
 
 # Commodity-specific thresholds for weather risk classification.
 RISK_THRESHOLDS: dict[str, dict[str, float]] = {
-    "Pistachios": {"temp_watch": 35.0, "temp_alert": 42.0, "precip_low_watch": 0.5, "precip_low_alert": 0.2, "precip_high_watch": 6.0, "precip_high_alert": 10.0, "humidity_low": 20.0},
-    "Dates": {"temp_watch": 42.0, "temp_alert": 48.0, "precip_low_watch": 0.2, "precip_low_alert": 0.05, "precip_high_watch": 3.0, "precip_high_alert": 6.0, "humidity_low": 15.0},
-    "Saffron": {"temp_watch": 28.0, "temp_alert": 33.0, "precip_low_watch": 0.5, "precip_low_alert": 0.2, "precip_high_watch": 6.0, "precip_high_alert": 10.0, "humidity_low": 25.0},
-    "Cotton": {"temp_watch": 36.0, "temp_alert": 42.0, "precip_low_watch": 0.8, "precip_low_alert": 0.3, "precip_high_watch": 8.0, "precip_high_alert": 14.0, "humidity_low": 25.0},
-    "Hazelnuts": {"temp_watch": 30.0, "temp_alert": 35.0, "precip_low_watch": 2.0, "precip_low_alert": 1.0, "precip_high_watch": 12.0, "precip_high_alert": 18.0, "humidity_low": 40.0},
-    "Olive Oil": {"temp_watch": 34.0, "temp_alert": 40.0, "precip_low_watch": 0.5, "precip_low_alert": 0.2, "precip_high_watch": 8.0, "precip_high_alert": 12.0, "humidity_low": 25.0},
+    "Pistachios": {"temp_watch": 40.0, "temp_alert": 46.0, "precip_low_watch": 0.08, "precip_low_alert": 0.02, "precip_high_watch": 6.0, "precip_high_alert": 10.0, "humidity_low": 10.0},
+    "Dates": {"temp_watch": 48.0, "temp_alert": 52.0, "precip_low_watch": 0.02, "precip_low_alert": 0.005, "precip_high_watch": 3.0, "precip_high_alert": 6.0, "humidity_low": 8.0},
+    "Saffron": {"temp_watch": 32.0, "temp_alert": 38.0, "precip_low_watch": 0.15, "precip_low_alert": 0.05, "precip_high_watch": 6.0, "precip_high_alert": 10.0, "humidity_low": 15.0},
+    "Cotton": {"temp_watch": 40.0, "temp_alert": 46.0, "precip_low_watch": 0.15, "precip_low_alert": 0.05, "precip_high_watch": 8.0, "precip_high_alert": 14.0, "humidity_low": 15.0},
+    "Hazelnuts": {"temp_watch": 32.0, "temp_alert": 37.0, "precip_low_watch": 2.0, "precip_low_alert": 1.0, "precip_high_watch": 12.0, "precip_high_alert": 18.0, "humidity_low": 40.0},
+    "Olive Oil": {"temp_watch": 38.0, "temp_alert": 44.0, "precip_low_watch": 0.15, "precip_low_alert": 0.05, "precip_high_watch": 8.0, "precip_high_alert": 12.0, "humidity_low": 15.0},
 }
 
 
@@ -147,12 +147,14 @@ async def _fetch_single_producer(commodity: str, config: dict) -> ProducerCountr
         weather = await _fetch_producer_weather(config["latitude"], config["longitude"])
     except Exception:
         logger.exception("Failed to fetch producer data, using fallback")
+        # Fallback values are intentionally moderate so they classify as Normal
+        # risk rather than inadvertently triggering Watch/Alert status.
         weather = {
-            "temperature_avg": 25.0,
-            "temperature_max": 32.0,
+            "temperature_avg": 22.0,
+            "temperature_max": 28.0,
             "precipitation_sum": 20.0,
-            "precipitation_daily_avg": 2.9,
-            "relative_humidity": 70.0,
+            "precipitation_daily_avg": 3.0,
+            "relative_humidity": 55.0,
         }
 
     risk, detail = _classify_risk(commodity, weather)

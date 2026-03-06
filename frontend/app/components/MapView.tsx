@@ -99,11 +99,20 @@ export default function MapView({ signals }: MapViewProps) {
             }
           ).addTo(map);
 
+          // Look up producer share for this region's country
+          const producer = sig.producers.find(
+            (p) => p.country === region.country
+          );
+          const shareLine = producer
+            ? `<strong>${producer.share_percent.toFixed(1)}%</strong> of global production<br/>`
+            : "";
+
           marker.bindPopup(
             `<div style="font-family:monospace;font-size:12px;color:#0a0e1a;min-width:180px">
               <strong>${sig.commodity}</strong> - ${region.region_name}<br/>
               <span style="color:${color};font-weight:bold">${sig.signal}</span><br/>
               <hr style="margin:4px 0;border-color:#ddd"/>
+              ${shareLine}
               Temp: ${region.temperature_avg.toFixed(1)}&deg;C<br/>
               Rain: ${region.precipitation_sum.toFixed(1)}mm<br/>
               Humidity: ${region.relative_humidity.toFixed(0)}%<br/>
