@@ -7,12 +7,12 @@ from app.models import Signal, Confidence, ProducerCountry, WeatherRisk
 
 # Thresholds for signal generation - all six commodities
 DROUGHT_THRESHOLDS: dict[str, dict[str, float]] = {
-    "Pistachios": {"precip_low": 0.15, "temp_high": 40.0, "humidity_low": 15.0},
-    "Dates": {"precip_low": 0.05, "temp_high": 50.0, "humidity_low": 10.0},
-    "Saffron": {"precip_low": 0.3, "temp_high": 32.0, "humidity_low": 20.0},
-    "Cotton": {"precip_low": 0.3, "temp_high": 42.0, "humidity_low": 20.0},
-    "Hazelnuts": {"precip_low": 2.0, "temp_high": 32.0, "humidity_low": 40.0},
-    "Olive Oil": {"precip_low": 0.3, "temp_high": 40.0, "humidity_low": 20.0},
+    "Pistachios": {"precip_low": 0.05, "temp_high": 42.0, "humidity_low": 12.0},
+    "Dates": {"precip_low": 0.01, "temp_high": 52.0, "humidity_low": 8.0},
+    "Saffron": {"precip_low": 0.1, "temp_high": 34.0, "humidity_low": 15.0},
+    "Cotton": {"precip_low": 0.1, "temp_high": 44.0, "humidity_low": 18.0},
+    "Hazelnuts": {"precip_low": 2.0, "temp_high": 34.0, "humidity_low": 40.0},
+    "Olive Oil": {"precip_low": 0.1, "temp_high": 42.0, "humidity_low": 18.0},
 }
 
 FLOOD_THRESHOLDS: dict[str, dict[str, float]] = {
@@ -127,7 +127,8 @@ def generate_commodity_signal(
     max_heat_region = max(analyses, key=lambda a: a["heat_score"])
 
     # Determine primary signal
-    if total_drought >= 5 or (total_drought >= 3 and total_heat >= 2) or total_heat >= 4:
+    # Tier 1: Severe drought/heat → medium/high confidence bullish
+    if total_drought >= 7 or (total_drought >= 4 and total_heat >= 3) or total_heat >= 5:
         signal = Signal.BULLISH
 
         if total_heat >= total_drought:
@@ -147,9 +148,9 @@ def generate_commodity_signal(
             )
 
         max_score = max(total_drought, total_heat)
-        confidence = Confidence.HIGH if max_score >= 6 else Confidence.MEDIUM
+        confidence = Confidence.HIGH if max_score >= 8 else Confidence.MEDIUM
 
-    elif total_flood >= 4:
+    elif total_flood >= 5:
         signal = Signal.BEARISH
         driver_region = max_flood_region
         key_driver = f"Excess rainfall in {driver_region['region_name']}, {driver_region['country']}"
@@ -157,9 +158,10 @@ def generate_commodity_signal(
             f"Heavy precipitation ({driver_region['precip_daily']:.1f}mm/day avg) risks harvest disruption "
             f"and quality degradation in {driver_region['region_name']}, pressuring near-term prices."
         )
-        confidence = Confidence.HIGH if total_flood >= 6 else Confidence.MEDIUM
+        confidence = Confidence.HIGH if total_flood >= 7 else Confidence.MEDIUM
 
-    elif total_drought >= 4:
+    # Tier 2: Moderate drought → low confidence bullish
+    elif total_drought >= 5:
         signal = Signal.BULLISH
         driver_region = max_drought_region
         key_driver = f"Dry spell in {driver_region['region_name']}, {driver_region['country']}"
@@ -169,7 +171,7 @@ def generate_commodity_signal(
         )
         confidence = Confidence.LOW
 
-    elif total_flood >= 2:
+    elif total_flood >= 3:
         signal = Signal.BEARISH
         driver_region = max_flood_region
         key_driver = f"Above-average rainfall in {driver_region['region_name']}, {driver_region['country']}"
@@ -227,7 +229,7 @@ def _apply_producer_boost(
             f"({', '.join(p.country for p in alert_countries)}) covering "
             f"{alert_share:.0f}% of global output signals supply-side risk."
         )
-    elif stressed_share >= 40 or (len(watch_countries) >= 3 and watch_share >= 20):
+    elif stressed_share >= 50 or (len(watch_countries) >= 3 and watch_share >= 30):
         worst = max(
             watch_countries + alert_countries, key=lambda p: p.share_percent
         )
