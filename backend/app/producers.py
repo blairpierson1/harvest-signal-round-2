@@ -10,60 +10,52 @@ from app.models import ProducerCountry, WeatherRisk
 
 logger = logging.getLogger(__name__)
 
-# Top 5 producing countries with primary growing region coordinates and global share.
+# Top producing countries for Middle East commodities with primary growing region coordinates and regional share.
 PRODUCER_CONFIG: dict[str, list[dict]] = {
-    "Coffee": [
-        {"country": "Brazil", "share_percent": 37.4, "latitude": -18.51, "longitude": -44.55},
-        {"country": "Vietnam", "share_percent": 17.4, "latitude": 14.35, "longitude": 108.00},
-        {"country": "Colombia", "share_percent": 7.2, "latitude": 4.60, "longitude": -75.80},
-        {"country": "Indonesia", "share_percent": 6.6, "latitude": -2.50, "longitude": 115.00},
-        {"country": "Ethiopia", "share_percent": 4.5, "latitude": 7.00, "longitude": 38.00},
+    "Pistachios": [
+        {"country": "Iran", "share_percent": 45.0, "latitude": 30.28, "longitude": 57.08},
+        {"country": "Turkey", "share_percent": 20.0, "latitude": 37.07, "longitude": 37.38},
+        {"country": "Saudi Arabia", "share_percent": 3.0, "latitude": 24.71, "longitude": 46.68},
+        {"country": "Lebanon", "share_percent": 1.5, "latitude": 33.89, "longitude": 35.50},
+        {"country": "Jordan", "share_percent": 1.0, "latitude": 31.95, "longitude": 35.93},
     ],
-    "Sugar": [
-        {"country": "Brazil", "share_percent": 21.0, "latitude": -22.19, "longitude": -48.79},
-        {"country": "India", "share_percent": 18.5, "latitude": 27.18, "longitude": 80.35},
-        {"country": "Thailand", "share_percent": 5.8, "latitude": 14.88, "longitude": 100.00},
-        {"country": "China", "share_percent": 5.5, "latitude": 23.83, "longitude": 108.33},
-        {"country": "Pakistan", "share_percent": 3.6, "latitude": 30.20, "longitude": 71.50},
+    "Figs": [
+        {"country": "Turkey", "share_percent": 28.0, "latitude": 37.85, "longitude": 27.85},
+        {"country": "Iran", "share_percent": 15.0, "latitude": 29.62, "longitude": 52.53},
+        {"country": "Saudi Arabia", "share_percent": 5.0, "latitude": 24.47, "longitude": 39.61},
+        {"country": "Iraq", "share_percent": 4.0, "latitude": 33.31, "longitude": 44.37},
+        {"country": "Lebanon", "share_percent": 2.0, "latitude": 33.85, "longitude": 35.90},
     ],
-    "Cocoa": [
-        {"country": "Ivory Coast", "share_percent": 38.2, "latitude": 5.28, "longitude": -6.58},
-        {"country": "Ghana", "share_percent": 17.0, "latitude": 6.75, "longitude": -1.52},
-        {"country": "Indonesia", "share_percent": 5.1, "latitude": -1.50, "longitude": 120.50},
-        {"country": "Nigeria", "share_percent": 4.8, "latitude": 7.50, "longitude": 3.90},
-        {"country": "Ecuador", "share_percent": 4.5, "latitude": -1.80, "longitude": -79.50},
+    "Olives": [
+        {"country": "Turkey", "share_percent": 20.0, "latitude": 38.42, "longitude": 27.14},
+        {"country": "Israel", "share_percent": 3.0, "latitude": 32.82, "longitude": 35.17},
+        {"country": "Jordan", "share_percent": 4.0, "latitude": 32.33, "longitude": 35.75},
+        {"country": "Lebanon", "share_percent": 3.5, "latitude": 33.85, "longitude": 35.90},
+        {"country": "Iraq", "share_percent": 1.5, "latitude": 36.34, "longitude": 43.13},
     ],
-    "Orange Juice": [
-        {"country": "Brazil", "share_percent": 30.0, "latitude": -22.19, "longitude": -48.79},
-        {"country": "USA", "share_percent": 15.0, "latitude": 28.54, "longitude": -81.38},
-        {"country": "Mexico", "share_percent": 8.0, "latitude": 19.17, "longitude": -96.13},
-        {"country": "Spain", "share_percent": 6.0, "latitude": 39.47, "longitude": -0.38},
-        {"country": "Italy", "share_percent": 4.0, "latitude": 37.50, "longitude": 15.09},
+    "Dates": [
+        {"country": "Saudi Arabia", "share_percent": 17.0, "latitude": 25.38, "longitude": 49.59},
+        {"country": "Iraq", "share_percent": 15.0, "latitude": 30.51, "longitude": 47.81},
+        {"country": "Iran", "share_percent": 14.0, "latitude": 31.32, "longitude": 48.67},
+        {"country": "Israel", "share_percent": 3.0, "latitude": 31.25, "longitude": 35.38},
+        {"country": "Jordan", "share_percent": 2.0, "latitude": 29.53, "longitude": 35.01},
     ],
-    "Lumber": [
-        {"country": "USA", "share_percent": 18.0, "latitude": 47.61, "longitude": -122.33},
-        {"country": "Canada", "share_percent": 15.0, "latitude": 49.28, "longitude": -123.12},
-        {"country": "Russia", "share_percent": 12.0, "latitude": 56.32, "longitude": 44.00},
-        {"country": "Sweden", "share_percent": 5.0, "latitude": 59.33, "longitude": 18.07},
-        {"country": "Finland", "share_percent": 4.0, "latitude": 60.17, "longitude": 24.94},
-    ],
-    "Palm Oil": [
-        {"country": "Indonesia", "share_percent": 58.0, "latitude": 0.51, "longitude": 101.45},
-        {"country": "Malaysia", "share_percent": 26.0, "latitude": 5.98, "longitude": 116.07},
-        {"country": "Thailand", "share_percent": 4.0, "latitude": 8.96, "longitude": 99.10},
-        {"country": "Colombia", "share_percent": 2.5, "latitude": 7.12, "longitude": -73.12},
-        {"country": "Nigeria", "share_percent": 2.0, "latitude": 6.52, "longitude": 3.38},
+    "Citrus": [
+        {"country": "Turkey", "share_percent": 15.0, "latitude": 36.90, "longitude": 30.70},
+        {"country": "Iran", "share_percent": 8.0, "latitude": 36.77, "longitude": 53.06},
+        {"country": "Israel", "share_percent": 5.0, "latitude": 32.08, "longitude": 34.78},
+        {"country": "Lebanon", "share_percent": 3.0, "latitude": 33.85, "longitude": 35.90},
+        {"country": "Iraq", "share_percent": 2.0, "latitude": 35.47, "longitude": 44.39},
     ],
 }
 
 # Commodity-specific thresholds for weather risk classification.
 RISK_THRESHOLDS: dict[str, dict[str, float]] = {
-    "Coffee": {"temp_watch": 28.0, "temp_alert": 32.0, "precip_low_watch": 2.0, "precip_low_alert": 1.0, "precip_high_watch": 10.0, "precip_high_alert": 14.0, "humidity_low": 50.0},
-    "Sugar": {"temp_watch": 32.0, "temp_alert": 36.0, "precip_low_watch": 2.0, "precip_low_alert": 1.0, "precip_high_watch": 12.0, "precip_high_alert": 16.0, "humidity_low": 45.0},
-    "Cocoa": {"temp_watch": 30.0, "temp_alert": 34.0, "precip_low_watch": 2.5, "precip_low_alert": 1.5, "precip_high_watch": 12.0, "precip_high_alert": 15.0, "humidity_low": 55.0},
-    "Orange Juice": {"temp_watch": 30.0, "temp_alert": 35.0, "precip_low_watch": 2.0, "precip_low_alert": 1.0, "precip_high_watch": 12.0, "precip_high_alert": 16.0, "humidity_low": 45.0},
-    "Lumber": {"temp_watch": 30.0, "temp_alert": 38.0, "precip_low_watch": 1.5, "precip_low_alert": 0.5, "precip_high_watch": 15.0, "precip_high_alert": 22.0, "humidity_low": 30.0},
-    "Palm Oil": {"temp_watch": 31.0, "temp_alert": 35.0, "precip_low_watch": 3.5, "precip_low_alert": 2.0, "precip_high_watch": 14.0, "precip_high_alert": 20.0, "humidity_low": 60.0},
+    "Pistachios": {"temp_watch": 38.0, "temp_alert": 44.0, "precip_low_watch": 0.5, "precip_low_alert": 0.2, "precip_high_watch": 5.0, "precip_high_alert": 10.0, "humidity_low": 20.0},
+    "Figs": {"temp_watch": 35.0, "temp_alert": 42.0, "precip_low_watch": 0.8, "precip_low_alert": 0.3, "precip_high_watch": 6.0, "precip_high_alert": 12.0, "humidity_low": 25.0},
+    "Olives": {"temp_watch": 34.0, "temp_alert": 40.0, "precip_low_watch": 1.0, "precip_low_alert": 0.4, "precip_high_watch": 7.0, "precip_high_alert": 14.0, "humidity_low": 25.0},
+    "Dates": {"temp_watch": 45.0, "temp_alert": 50.0, "precip_low_watch": 0.2, "precip_low_alert": 0.05, "precip_high_watch": 3.0, "precip_high_alert": 8.0, "humidity_low": 15.0},
+    "Citrus": {"temp_watch": 33.0, "temp_alert": 38.0, "precip_low_watch": 1.0, "precip_low_alert": 0.4, "precip_high_watch": 8.0, "precip_high_alert": 15.0, "humidity_low": 30.0},
 }
 
 

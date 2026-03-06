@@ -1,36 +1,33 @@
-"""Signal generation logic for soft commodities based on weather data."""
+"""Signal generation logic for Middle East commodities based on weather data."""
 
 from __future__ import annotations
 
 from app.models import Signal, Confidence, ProducerCountry, WeatherRisk
 
 
-# Thresholds for signal generation - all six commodities
+# Thresholds for signal generation - Middle East commodities
 DROUGHT_THRESHOLDS: dict[str, dict[str, float]] = {
-    "Coffee": {"precip_low": 1.5, "temp_high": 30.0, "humidity_low": 50.0},
-    "Sugar": {"precip_low": 1.5, "temp_high": 35.0, "humidity_low": 45.0},
-    "Cocoa": {"precip_low": 2.0, "temp_high": 33.0, "humidity_low": 55.0},
-    "Orange Juice": {"precip_low": 1.5, "temp_high": 34.0, "humidity_low": 45.0},
-    "Lumber": {"precip_low": 1.0, "temp_high": 35.0, "humidity_low": 30.0},
-    "Palm Oil": {"precip_low": 3.0, "temp_high": 34.0, "humidity_low": 60.0},
+    "Pistachios": {"precip_low": 0.3, "temp_high": 40.0, "humidity_low": 20.0},
+    "Figs": {"precip_low": 0.5, "temp_high": 38.0, "humidity_low": 25.0},
+    "Olives": {"precip_low": 0.6, "temp_high": 36.0, "humidity_low": 25.0},
+    "Dates": {"precip_low": 0.1, "temp_high": 48.0, "humidity_low": 15.0},
+    "Citrus": {"precip_low": 0.6, "temp_high": 35.0, "humidity_low": 30.0},
 }
 
 FLOOD_THRESHOLDS: dict[str, dict[str, float]] = {
-    "Coffee": {"precip_high": 12.0, "humidity_high": 88.0},
-    "Sugar": {"precip_high": 15.0, "humidity_high": 90.0},
-    "Cocoa": {"precip_high": 14.0, "humidity_high": 90.0},
-    "Orange Juice": {"precip_high": 15.0, "humidity_high": 92.0},
-    "Lumber": {"precip_high": 20.0, "humidity_high": 95.0},
-    "Palm Oil": {"precip_high": 18.0, "humidity_high": 92.0},
+    "Pistachios": {"precip_high": 8.0, "humidity_high": 80.0},
+    "Figs": {"precip_high": 10.0, "humidity_high": 85.0},
+    "Olives": {"precip_high": 12.0, "humidity_high": 85.0},
+    "Dates": {"precip_high": 5.0, "humidity_high": 75.0},
+    "Citrus": {"precip_high": 12.0, "humidity_high": 88.0},
 }
 
 HEAT_STRESS_THRESHOLDS: dict[str, float] = {
-    "Coffee": 33.0,
-    "Sugar": 38.0,
-    "Cocoa": 35.0,
-    "Orange Juice": 36.0,
-    "Lumber": 40.0,
-    "Palm Oil": 36.0,
+    "Pistachios": 44.0,
+    "Figs": 42.0,
+    "Olives": 40.0,
+    "Dates": 50.0,
+    "Citrus": 38.0,
 }
 
 

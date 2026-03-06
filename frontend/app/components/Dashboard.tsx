@@ -66,7 +66,7 @@ export default function Dashboard() {
               </div>
               <div className="hidden sm:block h-6 w-px bg-navy-700 mx-2" />
               <span className="hidden sm:block text-xs text-text-muted uppercase tracking-widest">
-                Soft Commodity Weather Intelligence
+                Middle East Commodity Weather Intelligence
               </span>
             </div>
 
@@ -166,7 +166,7 @@ export default function Dashboard() {
         {/* Loading State */}
         {loading && !data && (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
+            {[1, 2, 3, 4, 5].map((i) => (
               <div
                 key={i}
                 className="rounded-lg border border-border-subtle bg-surface-elevated p-6 animate-pulse"
