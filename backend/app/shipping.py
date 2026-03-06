@@ -17,45 +17,38 @@ FREIGHTOS_BASE_URL = "https://ship.freightos.com/api/shippingCalculator"
 
 # Primary export routes for each commodity (origin port -> destination port)
 SHIPPING_ROUTES: dict[str, dict[str, str]] = {
-    "Coffee": {
-        "route": "Santos to New York",
-        "origin": "Santos,Brazil",
-        "origin_port": "BRSSZ",
-        "destination": "NewYork,NY",
-        "destination_port": "USNYC",
-    },
-    "Sugar": {
-        "route": "Santos to Rotterdam",
-        "origin": "Santos,Brazil",
-        "origin_port": "BRSSZ",
+    "Pistachios": {
+        "route": "Bandar Abbas to Rotterdam",
+        "origin": "BandarAbbas,Iran",
+        "origin_port": "IRBND",
         "destination": "Rotterdam,Netherlands",
         "destination_port": "NLRTM",
     },
-    "Cocoa": {
-        "route": "Abidjan to Rotterdam",
-        "origin": "Abidjan,IvoryCoast",
-        "origin_port": "CIABJ",
+    "Figs": {
+        "route": "Izmir to Rotterdam",
+        "origin": "Izmir,Turkey",
+        "origin_port": "TRIZM",
         "destination": "Rotterdam,Netherlands",
         "destination_port": "NLRTM",
     },
-    "Orange Juice": {
-        "route": "Santos to Rotterdam",
-        "origin": "Santos,Brazil",
-        "origin_port": "BRSSZ",
+    "Olives": {
+        "route": "Mersin to Rotterdam",
+        "origin": "Mersin,Turkey",
+        "origin_port": "TRMER",
         "destination": "Rotterdam,Netherlands",
         "destination_port": "NLRTM",
     },
-    "Lumber": {
-        "route": "Vancouver to Shanghai",
-        "origin": "Vancouver,Canada",
-        "origin_port": "CAVAN",
-        "destination": "Shanghai,China",
-        "destination_port": "CNSHA",
+    "Dates": {
+        "route": "Jeddah to Rotterdam",
+        "origin": "Jeddah,SaudiArabia",
+        "origin_port": "SAJED",
+        "destination": "Rotterdam,Netherlands",
+        "destination_port": "NLRTM",
     },
-    "Palm Oil": {
-        "route": "Belawan to Rotterdam",
-        "origin": "Medan,Indonesia",
-        "origin_port": "IDBLW",
+    "Citrus": {
+        "route": "Haifa to Rotterdam",
+        "origin": "Haifa,Israel",
+        "origin_port": "ILHFA",
         "destination": "Rotterdam,Netherlands",
         "destination_port": "NLRTM",
     },

@@ -8,57 +8,50 @@ import httpx
 
 logger = logging.getLogger(__name__)
 
-# Growing region coordinates for all six commodities
+# Growing region coordinates for all five commodities
 COMMODITY_REGIONS: dict[str, list[dict]] = {
-    "Coffee": [
-        {"region_name": "Minas Gerais", "country": "Brazil", "latitude": -18.51, "longitude": -44.55},
-        {"region_name": "Sao Paulo State", "country": "Brazil", "latitude": -22.19, "longitude": -48.79},
-        {"region_name": "Central Highlands", "country": "Vietnam", "latitude": 14.35, "longitude": 108.00},
+    "Pistachios": [
+        {"region_name": "Kerman Province", "country": "Iran", "latitude": 30.28, "longitude": 57.08},
+        {"region_name": "Gaziantep", "country": "Turkey", "latitude": 37.07, "longitude": 37.38},
+        {"region_name": "Aleppo Region", "country": "Syria", "latitude": 36.20, "longitude": 37.15},
     ],
-    "Sugar": [
-        {"region_name": "Sao Paulo State", "country": "Brazil", "latitude": -22.19, "longitude": -48.79},
-        {"region_name": "Ribeirao Preto", "country": "Brazil", "latitude": -21.18, "longitude": -47.81},
-        {"region_name": "Uttar Pradesh", "country": "India", "latitude": 27.18, "longitude": 80.35},
+    "Figs": [
+        {"region_name": "Aydin Province", "country": "Turkey", "latitude": 37.85, "longitude": 27.85},
+        {"region_name": "Fars Province", "country": "Iran", "latitude": 29.62, "longitude": 52.53},
+        {"region_name": "Bekaa Valley", "country": "Lebanon", "latitude": 33.85, "longitude": 35.90},
     ],
-    "Cocoa": [
-        {"region_name": "Ashanti Region", "country": "Ghana", "latitude": 6.75, "longitude": -1.52},
-        {"region_name": "Western Region", "country": "Ghana", "latitude": 5.50, "longitude": -2.50},
-        {"region_name": "Bas-Sassandra", "country": "Ivory Coast", "latitude": 5.28, "longitude": -6.58},
+    "Olives": [
+        {"region_name": "Aegean Region", "country": "Turkey", "latitude": 38.42, "longitude": 27.14},
+        {"region_name": "Northern Israel", "country": "Israel", "latitude": 32.82, "longitude": 35.17},
+        {"region_name": "Ajloun", "country": "Jordan", "latitude": 32.33, "longitude": 35.75},
     ],
-    "Orange Juice": [
-        {"region_name": "Central Florida", "country": "USA", "latitude": 28.54, "longitude": -81.38},
-        {"region_name": "Sao Paulo State", "country": "Brazil", "latitude": -22.19, "longitude": -48.79},
-        {"region_name": "Veracruz", "country": "Mexico", "latitude": 19.17, "longitude": -96.13},
+    "Dates": [
+        {"region_name": "Al-Ahsa Oasis", "country": "Saudi Arabia", "latitude": 25.38, "longitude": 49.59},
+        {"region_name": "Basra Province", "country": "Iraq", "latitude": 30.51, "longitude": 47.81},
+        {"region_name": "Khuzestan Province", "country": "Iran", "latitude": 31.32, "longitude": 48.67},
     ],
-    "Lumber": [
-        {"region_name": "Pacific Northwest", "country": "USA", "latitude": 47.61, "longitude": -122.33},
-        {"region_name": "British Columbia", "country": "Canada", "latitude": 49.28, "longitude": -123.12},
-        {"region_name": "Southeast USA", "country": "USA", "latitude": 33.75, "longitude": -84.39},
-    ],
-    "Palm Oil": [
-        {"region_name": "Riau Province", "country": "Indonesia", "latitude": 0.51, "longitude": 101.45},
-        {"region_name": "North Sumatra", "country": "Indonesia", "latitude": 3.59, "longitude": 98.67},
-        {"region_name": "Sabah", "country": "Malaysia", "latitude": 5.98, "longitude": 116.07},
+    "Citrus": [
+        {"region_name": "Mediterranean Coast", "country": "Turkey", "latitude": 36.90, "longitude": 30.70},
+        {"region_name": "Coastal Plain", "country": "Israel", "latitude": 32.08, "longitude": 34.78},
+        {"region_name": "Bekaa Valley", "country": "Lebanon", "latitude": 33.85, "longitude": 35.90},
     ],
 }
 
 # Typical monthly averages for reference (simplified baselines)
 BASELINE_TEMP: dict[str, dict[str, float]] = {
-    "Coffee": {"Brazil": 23.0, "Vietnam": 24.0},
-    "Sugar": {"Brazil": 24.0, "India": 28.0},
-    "Cocoa": {"Ghana": 27.0, "Ivory Coast": 27.0},
-    "Orange Juice": {"USA": 24.0, "Brazil": 24.0, "Mexico": 25.0},
-    "Lumber": {"USA": 12.0, "Canada": 10.0},
-    "Palm Oil": {"Indonesia": 27.0, "Malaysia": 27.0},
+    "Pistachios": {"Iran": 28.0, "Turkey": 22.0},
+    "Figs": {"Turkey": 24.0, "Iran": 26.0, "Lebanon": 22.0},
+    "Olives": {"Turkey": 20.0, "Israel": 24.0, "Jordan": 25.0},
+    "Dates": {"Saudi Arabia": 35.0, "Iraq": 33.0, "Iran": 32.0},
+    "Citrus": {"Turkey": 20.0, "Israel": 22.0, "Lebanon": 20.0},
 }
 
 BASELINE_PRECIP: dict[str, dict[str, float]] = {
-    "Coffee": {"Brazil": 5.0, "Vietnam": 6.0},
-    "Sugar": {"Brazil": 4.5, "India": 3.0},
-    "Cocoa": {"Ghana": 5.5, "Ivory Coast": 6.0},
-    "Orange Juice": {"USA": 5.0, "Brazil": 4.5, "Mexico": 4.0},
-    "Lumber": {"USA": 4.0, "Canada": 3.5},
-    "Palm Oil": {"Indonesia": 7.0, "Malaysia": 7.0},
+    "Pistachios": {"Iran": 0.5, "Turkey": 1.5},
+    "Figs": {"Turkey": 1.5, "Iran": 0.8, "Lebanon": 2.0},
+    "Olives": {"Turkey": 2.0, "Israel": 1.5, "Jordan": 1.0},
+    "Dates": {"Saudi Arabia": 0.2, "Iraq": 0.5, "Iran": 0.5},
+    "Citrus": {"Turkey": 2.5, "Israel": 1.5, "Lebanon": 2.5},
 }
 
 
@@ -127,11 +120,11 @@ async def _fetch_single_region(region: dict) -> dict:
             "country": region["country"],
             "latitude": region["latitude"],
             "longitude": region["longitude"],
-            "temperature_avg": 25.0,
+            "temperature_avg": 28.0,
             "temperature_max": 32.0,
-            "precipitation_sum": 20.0,
-            "precipitation_daily_avg": 2.9,
-            "relative_humidity": 70.0,
+            "precipitation_sum": 7.0,
+            "precipitation_daily_avg": 1.0,
+            "relative_humidity": 35.0,
         }
 
 

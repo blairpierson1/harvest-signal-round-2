@@ -14,12 +14,11 @@ interface CommodityCardProps {
 }
 
 const commodityIcons: Record<string, string> = {
-  Coffee: "\u2615",
-  Sugar: "\uD83C\uDF6C",
-  Cocoa: "\uD83C\uDF6B",
-  "Orange Juice": "\uD83C\uDF4A",
-  Lumber: "\uD83E\uDEB5",
-  "Palm Oil": "\uD83C\uDF34",
+  Pistachios: "\uD83E\uDD5C",
+  Figs: "\uD83C\uDF4F",
+  Olives: "\uD83E\uDED2",
+  Dates: "\uD83C\uDF34",
+  Citrus: "\uD83C\uDF4A",
 };
 
 const signalBorderColor: Record<string, string> = {

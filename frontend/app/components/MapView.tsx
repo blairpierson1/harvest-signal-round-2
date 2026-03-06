@@ -41,10 +41,10 @@ export default function MapView({ signals }: MapViewProps) {
       if (cancelled || !mapRef.current) return;
 
       const map = L.map(mapRef.current, {
-        center: [10, 20],
-        zoom: 2,
-        minZoom: 2,
-        maxZoom: 6,
+        center: [30, 45],
+        zoom: 4,
+        minZoom: 3,
+        maxZoom: 8,
         zoomControl: true,
         attributionControl: false,
         scrollWheelZoom: true,
@@ -144,7 +144,7 @@ export default function MapView({ signals }: MapViewProps) {
       <div className="px-4 py-3 border-b border-border-subtle flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-text-primary tracking-wide">
-            Global Growing Regions
+            Middle East Growing Regions
           </span>
           <span className="text-xs text-text-muted">
             ({signals.reduce((acc, s) => acc + s.regions.length, 0)} regions tracked)
