@@ -41,11 +41,11 @@ async def _fetch_commodity_news(commodity: str, keyword: str) -> list[NewsHeadli
             "sortBy": "publishedAt",
             "pageSize": 3,
             "language": "en",
-            "apiKey": api_key,
         }
+        headers = {"X-Api-Key": api_key}
 
         async with httpx.AsyncClient(timeout=10.0) as client:
-            response = await client.get(NEWSAPI_BASE_URL, params=params)
+            response = await client.get(NEWSAPI_BASE_URL, params=params, headers=headers)
             response.raise_for_status()
             data = response.json()
 
@@ -62,7 +62,7 @@ async def _fetch_commodity_news(commodity: str, keyword: str) -> list[NewsHeadli
             )
         return headlines
 
-    except Exception:
+    except (httpx.HTTPError, httpx.TimeoutException, KeyError, IndexError, ValueError, TypeError, AttributeError):
         logger.exception("Failed to fetch news for %s", commodity)
         return []
 

@@ -1,5 +1,6 @@
 """Shared dependencies: authentication, rate limiting, and configuration."""
 
+import hmac
 import logging
 import os
 
@@ -17,9 +18,11 @@ logger = logging.getLogger(__name__)
 ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
 
 # ---------------------------------------------------------------------------
-# API-key authentication (optional – skipped when API_KEY is not set)
+# API-key authentication
 # ---------------------------------------------------------------------------
 API_KEY = os.getenv("API_KEY") or None
+DISABLE_AUTH = os.getenv("DISABLE_AUTH", "").lower() == "true"
+TRUSTED_PROXY = os.getenv("TRUSTED_PROXY", "").lower() == "true"
 
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
@@ -28,14 +31,23 @@ async def verify_api_key(
     request: Request,
     api_key: str | None = Security(api_key_header),
 ) -> None:
-    """Validate the API key if one is configured.
+    """Validate the API key.
+
+    If ``DISABLE_AUTH=true`` is set, authentication is skipped (local dev only).
+    Otherwise, ``API_KEY`` **must** be configured or the server returns 500.
 
     Accepts the key via the ``X-API-Key`` header **or** an
     ``Authorization: Bearer <key>`` header.
     """
-    if API_KEY is None:
-        # No key configured – authentication disabled
+    if DISABLE_AUTH:
         return
+
+    if API_KEY is None:
+        raise StarletteHTTPException(
+            status_code=500,
+            detail="Server misconfiguration: API_KEY is not set. "
+            "Set API_KEY or set DISABLE_AUTH=true for local development.",
+        )
 
     # Try X-API-Key header first, then Authorization Bearer
     key = api_key
@@ -44,20 +56,37 @@ async def verify_api_key(
         if auth_header.startswith("Bearer "):
             key = auth_header[len("Bearer "):]
 
-    if key != API_KEY:
+    if not key or not hmac.compare_digest(key, API_KEY):
         raise StarletteHTTPException(status_code=401, detail="Invalid or missing API key")
 
 
 # ---------------------------------------------------------------------------
 # Rate limiting
 # ---------------------------------------------------------------------------
-limiter = Limiter(key_func=get_remote_address)
+
+
+def _get_real_ip(request: Request) -> str:
+    """Extract client IP, preferring X-Forwarded-For behind a trusted proxy."""
+    if TRUSTED_PROXY:
+        forwarded = request.headers.get("X-Forwarded-For")
+        if forwarded:
+            # Take the first (leftmost) IP which is the original client
+            return forwarded.split(",")[0].strip()
+    return get_remote_address(request)
+
+
+limiter = Limiter(key_func=_get_real_ip)
 
 
 def log_startup_warnings() -> None:
     """Log warnings for missing configuration at startup."""
-    if API_KEY is None:
+    if DISABLE_AUTH:
         logger.warning(
-            "API_KEY environment variable is not set – authentication is disabled. "
-            "Set API_KEY to enable API-key authentication."
+            "DISABLE_AUTH is set – authentication is disabled. "
+            "Do NOT use this in production."
+        )
+    elif API_KEY is None:
+        logger.warning(
+            "API_KEY environment variable is not set and DISABLE_AUTH is not enabled. "
+            "All requests will receive a 500 error until API_KEY is configured."
         )
