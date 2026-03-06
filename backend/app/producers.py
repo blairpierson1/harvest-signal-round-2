@@ -90,11 +90,11 @@ async def _fetch_producer_weather(latitude: float, longitude: float) -> dict:
     humidity_hourly = [h for h in (hourly.get("relative_humidity_2m") or []) if h is not None]
 
     return {
-        "temperature_avg": round(sum(temps_mean) / len(temps_mean), 1) if temps_mean else 25.0,
-        "temperature_max": round(max(temps_max), 1) if temps_max else 32.0,
-        "precipitation_sum": round(sum(precip), 1) if precip else 20.0,
-        "precipitation_daily_avg": round(sum(precip) / len(precip), 1) if precip else 2.9,
-        "relative_humidity": round(sum(humidity_hourly) / len(humidity_hourly), 1) if humidity_hourly else 70.0,
+        "temperature_avg": round(sum(temps_mean) / len(temps_mean), 1) if temps_mean else 30.0,
+        "temperature_max": round(max(temps_max), 1) if temps_max else 38.0,
+        "precipitation_sum": round(sum(precip), 1) if precip else 7.0,
+        "precipitation_daily_avg": round(sum(precip) / len(precip), 1) if precip else 1.0,
+        "relative_humidity": round(sum(humidity_hourly) / len(humidity_hourly), 1) if humidity_hourly else 35.0,
     }
 
 
@@ -142,8 +142,8 @@ async def _fetch_single_producer(commodity: str, config: dict) -> ProducerCountr
         weather = {
             "temperature_avg": 30.0,
             "temperature_max": 38.0,
-            "precipitation_sum": 3.5,
-            "precipitation_daily_avg": 0.5,
+            "precipitation_sum": 7.0,
+            "precipitation_daily_avg": 1.0,
             "relative_humidity": 35.0,
         }
 

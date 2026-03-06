@@ -122,8 +122,8 @@ async def _fetch_single_region(region: dict) -> dict:
             "longitude": region["longitude"],
             "temperature_avg": 30.0,
             "temperature_max": 38.0,
-            "precipitation_sum": 3.5,
-            "precipitation_daily_avg": 0.5,
+            "precipitation_sum": 7.0,
+            "precipitation_daily_avg": 1.0,
             "relative_humidity": 35.0,
         }
 
