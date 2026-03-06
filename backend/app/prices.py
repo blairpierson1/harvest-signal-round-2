@@ -69,7 +69,7 @@ async def _fetch_yahoo_price(commodity: str, config: dict[str, str]) -> PriceTre
             source="yahoo_finance",
         )
 
-    except (httpx.HTTPError, httpx.TimeoutException, KeyError, ValueError, TypeError, AttributeError):
+    except (httpx.HTTPError, httpx.TimeoutException, KeyError, IndexError, ValueError, TypeError, AttributeError):
         logger.exception("Failed to fetch price from Yahoo Finance for %s", commodity)
         return _get_estimated_price(commodity)
 
@@ -168,7 +168,7 @@ async def fetch_price_history(commodity: str) -> PriceHistory:
             source="yahoo_finance",
         )
 
-    except (httpx.HTTPError, httpx.TimeoutException, KeyError, ValueError, TypeError, AttributeError):
+    except (httpx.HTTPError, httpx.TimeoutException, KeyError, IndexError, ValueError, TypeError, AttributeError):
         logger.exception("Failed to fetch price history for %s", commodity)
         return PriceHistory()
 

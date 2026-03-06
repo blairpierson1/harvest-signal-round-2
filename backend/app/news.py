@@ -62,7 +62,7 @@ async def _fetch_commodity_news(commodity: str, keyword: str) -> list[NewsHeadli
             )
         return headlines
 
-    except (httpx.HTTPError, httpx.TimeoutException, KeyError, ValueError, TypeError, AttributeError):
+    except (httpx.HTTPError, httpx.TimeoutException, KeyError, IndexError, ValueError, TypeError, AttributeError):
         logger.exception("Failed to fetch news for %s", commodity)
         return []
 
