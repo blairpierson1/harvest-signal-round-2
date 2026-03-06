@@ -6,6 +6,7 @@
 |---|---|---|
 | `API_KEY` | Yes (prod) | Secret key used to authenticate requests via `X-API-Key` header or `Authorization: Bearer` token. Must be set in production. |
 | `DISABLE_AUTH` | No | Set to `true` to skip API key authentication. **For local development only.** |
+| `TRUSTED_PROXY` | No | Set to `true` when running behind a reverse proxy (e.g., Fly.io) so rate limiting uses the real client IP from `X-Forwarded-For`. |
 | `ALLOWED_ORIGINS` | No | Comma-separated CORS origins. Defaults to `http://localhost:3000`. |
 | `NEWSAPI_KEY` | No | NewsAPI.org key for fetching commodity news headlines. News fetch is skipped if absent. |
 
