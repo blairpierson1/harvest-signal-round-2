@@ -13,6 +13,15 @@ const SIGNAL_COLORS: Record<Signal, string> = {
   Neutral: "#f59e0b",
 };
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 const DARK_TILE_URL =
   "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
 
@@ -35,6 +44,9 @@ export default function MapView({ signals }: MapViewProps) {
         const link = document.createElement("link");
         link.rel = "stylesheet";
         link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+        link.integrity =
+          "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=";
+        link.crossOrigin = "anonymous";
         document.head.appendChild(link);
       }
 
@@ -104,19 +116,19 @@ export default function MapView({ signals }: MapViewProps) {
             (p) => p.country === region.country
           );
           const shareLine = producer
-            ? `<strong>${producer.share_percent.toFixed(1)}%</strong> of global production<br/>`
+            ? `<strong>${escapeHtml(producer.share_percent.toFixed(1))}%</strong> of global production<br/>`
             : "";
 
           marker.bindPopup(
             `<div style="font-family:monospace;font-size:12px;color:#0a0e1a;min-width:180px">
-              <strong>${sig.commodity}</strong> - ${region.region_name}<br/>
-              <span style="color:${color};font-weight:bold">${sig.signal}</span><br/>
+              <strong>${escapeHtml(sig.commodity)}</strong> - ${escapeHtml(region.region_name)}<br/>
+              <span style="color:${color};font-weight:bold">${escapeHtml(sig.signal)}</span><br/>
               <hr style="margin:4px 0;border-color:#ddd"/>
               ${shareLine}
-              Temp: ${region.temperature_avg.toFixed(1)}&deg;C<br/>
-              Rain: ${region.precipitation_sum.toFixed(1)}mm<br/>
-              Humidity: ${region.relative_humidity.toFixed(0)}%<br/>
-              <em>${region.condition_summary}</em>
+              Temp: ${escapeHtml(region.temperature_avg.toFixed(1))}&deg;C<br/>
+              Rain: ${escapeHtml(region.precipitation_sum.toFixed(1))}mm<br/>
+              Humidity: ${escapeHtml(region.relative_humidity.toFixed(0))}%<br/>
+              <em>${escapeHtml(region.condition_summary)}</em>
             </div>`
           );
         }
@@ -145,15 +157,15 @@ export default function MapView({ signals }: MapViewProps) {
 
           const rateLabel =
             sig.shipping.rate_usd !== null
-              ? `$${sig.shipping.rate_usd.toLocaleString()} / ${sig.shipping.container_type}`
+              ? `$${escapeHtml(sig.shipping.rate_usd.toLocaleString())} / ${escapeHtml(sig.shipping.container_type)}`
               : "Rate N/A";
 
           polyline.bindPopup(
             `<div style="font-family:monospace;font-size:12px;color:#0a0e1a;min-width:180px">
-              <strong>${sig.commodity}</strong> Shipping Lane<br/>
-              <span style="color:${laneColor};font-weight:bold">${sig.shipping.route}</span><br/>
+              <strong>${escapeHtml(sig.commodity)}</strong> Shipping Lane<br/>
+              <span style="color:${laneColor};font-weight:bold">${escapeHtml(sig.shipping.route)}</span><br/>
               <hr style="margin:4px 0;border-color:#ddd"/>
-              ${sig.shipping.origin_port} &#x2192; ${sig.shipping.destination_port}<br/>
+              ${escapeHtml(sig.shipping.origin_port)} &#x2192; ${escapeHtml(sig.shipping.destination_port)}<br/>
               ${rateLabel}
             </div>`
           );
