@@ -120,5 +120,5 @@ async def api_health():
     return {
         "status": "healthy",
         "timestamp": datetime.now(timezone.utc).isoformat(),
-        "commodities": ["Pistachios", "Figs", "Olives", "Dates", "Citrus"],
+        "commodities": ["Pistachios", "Dates", "Saffron", "Cotton", "Hazelnuts", "Olive Oil"],
     }

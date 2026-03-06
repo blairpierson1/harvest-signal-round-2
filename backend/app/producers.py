@@ -10,52 +10,60 @@ from app.models import ProducerCountry, WeatherRisk
 
 logger = logging.getLogger(__name__)
 
-# Top producing countries for Middle East commodities with primary growing region coordinates and regional share.
+# Top 5 producing countries with primary growing region coordinates and global share.
 PRODUCER_CONFIG: dict[str, list[dict]] = {
     "Pistachios": [
-        {"country": "Iran", "share_percent": 45.0, "latitude": 30.28, "longitude": 57.08},
-        {"country": "Turkey", "share_percent": 20.0, "latitude": 37.07, "longitude": 37.38},
-        {"country": "Saudi Arabia", "share_percent": 3.0, "latitude": 24.71, "longitude": 46.68},
-        {"country": "Lebanon", "share_percent": 1.5, "latitude": 33.89, "longitude": 35.50},
-        {"country": "Jordan", "share_percent": 1.0, "latitude": 31.95, "longitude": 35.93},
-    ],
-    "Figs": [
-        {"country": "Turkey", "share_percent": 28.0, "latitude": 37.85, "longitude": 27.85},
-        {"country": "Iran", "share_percent": 15.0, "latitude": 29.62, "longitude": 52.53},
-        {"country": "Saudi Arabia", "share_percent": 5.0, "latitude": 24.47, "longitude": 39.61},
-        {"country": "Iraq", "share_percent": 4.0, "latitude": 33.31, "longitude": 44.37},
-        {"country": "Lebanon", "share_percent": 2.0, "latitude": 33.85, "longitude": 35.90},
-    ],
-    "Olives": [
-        {"country": "Turkey", "share_percent": 20.0, "latitude": 38.42, "longitude": 27.14},
-        {"country": "Israel", "share_percent": 3.0, "latitude": 32.82, "longitude": 35.17},
-        {"country": "Jordan", "share_percent": 4.0, "latitude": 32.33, "longitude": 35.75},
-        {"country": "Lebanon", "share_percent": 3.5, "latitude": 33.85, "longitude": 35.90},
-        {"country": "Iraq", "share_percent": 1.5, "latitude": 36.34, "longitude": 43.13},
+        {"country": "Iran", "share_percent": 40.0, "latitude": 30.28, "longitude": 57.08},
+        {"country": "USA", "share_percent": 28.0, "latitude": 36.60, "longitude": -119.80},
+        {"country": "Turkey", "share_percent": 15.0, "latitude": 37.07, "longitude": 37.38},
+        {"country": "China", "share_percent": 5.0, "latitude": 37.80, "longitude": 75.00},
+        {"country": "Syria", "share_percent": 3.0, "latitude": 36.20, "longitude": 37.16},
     ],
     "Dates": [
-        {"country": "Saudi Arabia", "share_percent": 17.0, "latitude": 25.38, "longitude": 49.59},
-        {"country": "Iraq", "share_percent": 15.0, "latitude": 30.51, "longitude": 47.81},
-        {"country": "Iran", "share_percent": 14.0, "latitude": 31.32, "longitude": 48.67},
-        {"country": "Israel", "share_percent": 3.0, "latitude": 31.25, "longitude": 35.38},
-        {"country": "Jordan", "share_percent": 2.0, "latitude": 29.53, "longitude": 35.01},
+        {"country": "Egypt", "share_percent": 18.0, "latitude": 29.20, "longitude": 25.52},
+        {"country": "Saudi Arabia", "share_percent": 15.0, "latitude": 24.47, "longitude": 39.61},
+        {"country": "Iran", "share_percent": 14.0, "latitude": 27.18, "longitude": 53.68},
+        {"country": "Algeria", "share_percent": 12.0, "latitude": 34.05, "longitude": 5.73},
+        {"country": "Iraq", "share_percent": 8.0, "latitude": 30.51, "longitude": 47.81},
     ],
-    "Citrus": [
-        {"country": "Turkey", "share_percent": 15.0, "latitude": 36.90, "longitude": 30.70},
-        {"country": "Iran", "share_percent": 8.0, "latitude": 36.77, "longitude": 53.06},
-        {"country": "Israel", "share_percent": 5.0, "latitude": 32.08, "longitude": 34.78},
-        {"country": "Lebanon", "share_percent": 3.0, "latitude": 33.85, "longitude": 35.90},
-        {"country": "Iraq", "share_percent": 2.0, "latitude": 35.47, "longitude": 44.39},
+    "Saffron": [
+        {"country": "Iran", "share_percent": 90.0, "latitude": 34.30, "longitude": 58.80},
+        {"country": "India", "share_percent": 4.0, "latitude": 34.08, "longitude": 74.80},
+        {"country": "Afghanistan", "share_percent": 3.0, "latitude": 34.35, "longitude": 62.20},
+        {"country": "Spain", "share_percent": 1.5, "latitude": 38.99, "longitude": -1.86},
+        {"country": "Morocco", "share_percent": 1.0, "latitude": 31.63, "longitude": -8.01},
+    ],
+    "Cotton": [
+        {"country": "Turkey", "share_percent": 5.0, "latitude": 37.16, "longitude": 38.79},
+        {"country": "Egypt", "share_percent": 2.0, "latitude": 30.90, "longitude": 31.20},
+        {"country": "Pakistan", "share_percent": 8.0, "latitude": 25.38, "longitude": 68.37},
+        {"country": "India", "share_percent": 25.0, "latitude": 21.15, "longitude": 79.09},
+        {"country": "Uzbekistan", "share_percent": 4.0, "latitude": 40.10, "longitude": 65.37},
+    ],
+    "Hazelnuts": [
+        {"country": "Turkey", "share_percent": 70.0, "latitude": 41.00, "longitude": 39.72},
+        {"country": "Italy", "share_percent": 13.0, "latitude": 44.69, "longitude": 8.04},
+        {"country": "Azerbaijan", "share_percent": 5.0, "latitude": 41.19, "longitude": 47.17},
+        {"country": "USA", "share_percent": 4.0, "latitude": 45.52, "longitude": -122.68},
+        {"country": "Georgia", "share_percent": 3.0, "latitude": 42.27, "longitude": 42.70},
+    ],
+    "Olive Oil": [
+        {"country": "Turkey", "share_percent": 15.0, "latitude": 38.42, "longitude": 27.14},
+        {"country": "Tunisia", "share_percent": 10.0, "latitude": 34.74, "longitude": 10.76},
+        {"country": "Syria", "share_percent": 5.0, "latitude": 35.52, "longitude": 35.79},
+        {"country": "Morocco", "share_percent": 5.0, "latitude": 31.63, "longitude": -8.01},
+        {"country": "Jordan", "share_percent": 2.0, "latitude": 32.06, "longitude": 36.09},
     ],
 }
 
 # Commodity-specific thresholds for weather risk classification.
 RISK_THRESHOLDS: dict[str, dict[str, float]] = {
-    "Pistachios": {"temp_watch": 38.0, "temp_alert": 44.0, "precip_low_watch": 0.5, "precip_low_alert": 0.2, "precip_high_watch": 5.0, "precip_high_alert": 10.0, "humidity_low": 20.0},
-    "Figs": {"temp_watch": 35.0, "temp_alert": 42.0, "precip_low_watch": 0.8, "precip_low_alert": 0.3, "precip_high_watch": 6.0, "precip_high_alert": 12.0, "humidity_low": 25.0},
-    "Olives": {"temp_watch": 34.0, "temp_alert": 40.0, "precip_low_watch": 1.0, "precip_low_alert": 0.4, "precip_high_watch": 7.0, "precip_high_alert": 14.0, "humidity_low": 25.0},
-    "Dates": {"temp_watch": 45.0, "temp_alert": 50.0, "precip_low_watch": 0.2, "precip_low_alert": 0.05, "precip_high_watch": 3.0, "precip_high_alert": 8.0, "humidity_low": 15.0},
-    "Citrus": {"temp_watch": 33.0, "temp_alert": 38.0, "precip_low_watch": 1.0, "precip_low_alert": 0.4, "precip_high_watch": 8.0, "precip_high_alert": 15.0, "humidity_low": 30.0},
+    "Pistachios": {"temp_watch": 35.0, "temp_alert": 42.0, "precip_low_watch": 0.5, "precip_low_alert": 0.2, "precip_high_watch": 6.0, "precip_high_alert": 10.0, "humidity_low": 20.0},
+    "Dates": {"temp_watch": 42.0, "temp_alert": 48.0, "precip_low_watch": 0.2, "precip_low_alert": 0.05, "precip_high_watch": 3.0, "precip_high_alert": 6.0, "humidity_low": 15.0},
+    "Saffron": {"temp_watch": 28.0, "temp_alert": 33.0, "precip_low_watch": 0.5, "precip_low_alert": 0.2, "precip_high_watch": 6.0, "precip_high_alert": 10.0, "humidity_low": 25.0},
+    "Cotton": {"temp_watch": 36.0, "temp_alert": 42.0, "precip_low_watch": 0.8, "precip_low_alert": 0.3, "precip_high_watch": 8.0, "precip_high_alert": 14.0, "humidity_low": 25.0},
+    "Hazelnuts": {"temp_watch": 30.0, "temp_alert": 35.0, "precip_low_watch": 2.0, "precip_low_alert": 1.0, "precip_high_watch": 12.0, "precip_high_alert": 18.0, "humidity_low": 40.0},
+    "Olive Oil": {"temp_watch": 34.0, "temp_alert": 40.0, "precip_low_watch": 0.5, "precip_low_alert": 0.2, "precip_high_watch": 8.0, "precip_high_alert": 12.0, "humidity_low": 25.0},
 }
 
 
@@ -90,11 +98,11 @@ async def _fetch_producer_weather(latitude: float, longitude: float) -> dict:
     humidity_hourly = [h for h in (hourly.get("relative_humidity_2m") or []) if h is not None]
 
     return {
-        "temperature_avg": round(sum(temps_mean) / len(temps_mean), 1) if temps_mean else 28.0,
+        "temperature_avg": round(sum(temps_mean) / len(temps_mean), 1) if temps_mean else 25.0,
         "temperature_max": round(max(temps_max), 1) if temps_max else 32.0,
-        "precipitation_sum": round(sum(precip), 1) if precip else 7.0,
-        "precipitation_daily_avg": round(sum(precip) / len(precip), 1) if precip else 1.0,
-        "relative_humidity": round(sum(humidity_hourly) / len(humidity_hourly), 1) if humidity_hourly else 35.0,
+        "precipitation_sum": round(sum(precip), 1) if precip else 20.0,
+        "precipitation_daily_avg": round(sum(precip) / len(precip), 1) if precip else 2.9,
+        "relative_humidity": round(sum(humidity_hourly) / len(humidity_hourly), 1) if humidity_hourly else 70.0,
     }
 
 
@@ -140,11 +148,11 @@ async def _fetch_single_producer(commodity: str, config: dict) -> ProducerCountr
     except Exception:
         logger.exception("Failed to fetch producer data, using fallback")
         weather = {
-            "temperature_avg": 28.0,
+            "temperature_avg": 25.0,
             "temperature_max": 32.0,
-            "precipitation_sum": 7.0,
-            "precipitation_daily_avg": 1.0,
-            "relative_humidity": 35.0,
+            "precipitation_sum": 20.0,
+            "precipitation_daily_avg": 2.9,
+            "relative_humidity": 70.0,
         }
 
     risk, detail = _classify_risk(commodity, weather)

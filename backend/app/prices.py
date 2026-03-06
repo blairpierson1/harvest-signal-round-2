@@ -1,6 +1,7 @@
-"""Price trend data for Middle East commodities.
+"""Price trend data for soft commodities.
 
-Commodities with Yahoo Finance tickers use live data; others use estimated fallback prices.
+All six commodities use Yahoo Finance as the single price source.
+No waterfall or fallback to other providers.
 """
 
 import asyncio
@@ -15,13 +16,16 @@ logger = logging.getLogger(__name__)
 
 YAHOO_FINANCE_BASE_URL = "https://query1.finance.yahoo.com/v8/finance/chart"
 
-# Yahoo Finance symbols for all tracked commodities
+# Yahoo Finance symbols for tracked commodities.
+# Most Middle East commodities lack direct futures tickers on Yahoo Finance;
+# only Cotton (CT=F) has a liquid futures contract. Others use estimated prices.
 COMMODITY_CONFIG: dict[str, dict[str, str]] = {
-    "Pistachios": {"symbol": ""},
-    "Figs": {"symbol": ""},
-    "Olives": {"symbol": ""},
-    "Dates": {"symbol": ""},
-    "Citrus": {"symbol": "OJ=F"},
+    "Pistachios": {},
+    "Dates": {},
+    "Saffron": {},
+    "Cotton": {"symbol": "CT=F"},
+    "Hazelnuts": {},
+    "Olive Oil": {},
 }
 
 
@@ -29,8 +33,6 @@ async def _fetch_yahoo_price(commodity: str, config: dict[str, str]) -> PriceTre
     """Fetch price from Yahoo Finance chart endpoint."""
     try:
         symbol = config["symbol"]
-        if not symbol:
-            return _get_estimated_price(commodity)
         url = f"{YAHOO_FINANCE_BASE_URL}/{symbol}"
         params = {"range": "5d", "interval": "1d"}
         headers = {"User-Agent": "Mozilla/5.0"}
@@ -73,21 +75,26 @@ async def _fetch_yahoo_price(commodity: str, config: dict[str, str]) -> PriceTre
 
 
 async def fetch_price_trend(commodity: str) -> PriceTrend:
-    """Fetch current price trend for a commodity from Yahoo Finance."""
+    """Fetch current price trend for a commodity from Yahoo Finance.
+
+    Commodities without a ``symbol`` in COMMODITY_CONFIG fall back to
+    estimated prices (most Middle East commodities lack futures tickers).
+    """
     config = COMMODITY_CONFIG.get(commodity)
-    if not config:
-        return PriceTrend()
+    if not config or "symbol" not in config:
+        return _get_estimated_price(commodity)
     return await _fetch_yahoo_price(commodity, config)
 
 
 def _get_estimated_price(commodity: str) -> PriceTrend:
     """Return estimated commodity prices as fallback when Yahoo Finance fails."""
     estimates: dict[str, PriceTrend] = {
-        "Pistachios": PriceTrend(current_price=8.50, change_percent=3.03, direction="up", source="estimated"),
-        "Figs": PriceTrend(current_price=6.75, change_percent=2.27, direction="up", source="estimated"),
-        "Olives": PriceTrend(current_price=4.80, change_percent=2.13, direction="up", source="estimated"),
-        "Dates": PriceTrend(current_price=3.20, change_percent=-1.54, direction="down", source="estimated"),
-        "Citrus": PriceTrend(current_price=1.85, change_percent=-4.15, direction="down", source="estimated"),
+        "Pistachios": PriceTrend(current_price=5.50, change_percent=0.0, direction="flat", source="estimated"),
+        "Dates": PriceTrend(current_price=2.50, change_percent=0.0, direction="flat", source="estimated"),
+        "Saffron": PriceTrend(current_price=1500.00, change_percent=0.0, direction="flat", source="estimated"),
+        "Cotton": PriceTrend(current_price=85.00, change_percent=0.0, direction="flat", source="estimated"),
+        "Hazelnuts": PriceTrend(current_price=6.00, change_percent=0.0, direction="flat", source="estimated"),
+        "Olive Oil": PriceTrend(current_price=8.50, change_percent=0.0, direction="flat", source="estimated"),
     }
     return estimates.get(commodity, PriceTrend())
 
@@ -124,12 +131,10 @@ def _compute_trend_label(points: list[PriceHistoryPoint]) -> str:
 async def fetch_price_history(commodity: str) -> PriceHistory:
     """Fetch 30-day price history from Yahoo Finance for sparkline chart."""
     config = COMMODITY_CONFIG.get(commodity)
-    if not config:
+    if not config or "symbol" not in config:
         return PriceHistory()
 
     symbol = config["symbol"]
-    if not symbol:
-        return PriceHistory()
     try:
         url = f"{YAHOO_FINANCE_BASE_URL}/{symbol}"
         params = {"range": "1mo", "interval": "1d"}

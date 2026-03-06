@@ -9,10 +9,11 @@ interface PriceTickerProps {
 
 const commodityUnits: Record<string, string> = {
   Pistachios: "$/lb",
-  Figs: "$/lb",
-  Olives: "$/lb",
   Dates: "$/lb",
-  Citrus: "$/lb",
+  Saffron: "$/oz",
+  Cotton: "\u00a2/lb",
+  Hazelnuts: "$/lb",
+  "Olive Oil": "$/L",
 };
 
 export default function PriceTicker({ trend, commodity }: PriceTickerProps) {

@@ -15,26 +15,25 @@ logger = logging.getLogger(__name__)
 
 FREIGHTOS_BASE_URL = "https://ship.freightos.com/api/shippingCalculator"
 
+# Port coordinates for mapping shipping lanes
+PORT_COORDINATES: dict[str, tuple[float, float]] = {
+    "IRBND": (27.19, 56.28),     # Bandar Abbas, Iran
+    "NLRTM": (51.92, 4.48),      # Rotterdam, Netherlands
+    "SAJED": (21.49, 39.19),     # Jeddah, Saudi Arabia
+    "AEJEA": (25.27, 55.29),     # Jebel Ali (Dubai), UAE
+    "TRMER": (36.80, 34.63),     # Mersin, Turkey
+    "CNSHA": (31.23, 121.47),    # Shanghai, China
+    "TRTRB": (41.00, 39.72),     # Trabzon, Turkey
+    "TRIZM": (38.42, 27.14),     # Izmir, Turkey
+    "USNYC": (40.69, -74.04),    # New York, USA
+}
+
 # Primary export routes for each commodity (origin port -> destination port)
 SHIPPING_ROUTES: dict[str, dict[str, str]] = {
     "Pistachios": {
         "route": "Bandar Abbas to Rotterdam",
         "origin": "BandarAbbas,Iran",
         "origin_port": "IRBND",
-        "destination": "Rotterdam,Netherlands",
-        "destination_port": "NLRTM",
-    },
-    "Figs": {
-        "route": "Izmir to Rotterdam",
-        "origin": "Izmir,Turkey",
-        "origin_port": "TRIZM",
-        "destination": "Rotterdam,Netherlands",
-        "destination_port": "NLRTM",
-    },
-    "Olives": {
-        "route": "Mersin to Rotterdam",
-        "origin": "Mersin,Turkey",
-        "origin_port": "TRMER",
         "destination": "Rotterdam,Netherlands",
         "destination_port": "NLRTM",
     },
@@ -45,12 +44,33 @@ SHIPPING_ROUTES: dict[str, dict[str, str]] = {
         "destination": "Rotterdam,Netherlands",
         "destination_port": "NLRTM",
     },
-    "Citrus": {
-        "route": "Haifa to Rotterdam",
-        "origin": "Haifa,Israel",
-        "origin_port": "ILHFA",
+    "Saffron": {
+        "route": "Bandar Abbas to Dubai",
+        "origin": "BandarAbbas,Iran",
+        "origin_port": "IRBND",
+        "destination": "Dubai,UAE",
+        "destination_port": "AEJEA",
+    },
+    "Cotton": {
+        "route": "Mersin to Shanghai",
+        "origin": "Mersin,Turkey",
+        "origin_port": "TRMER",
+        "destination": "Shanghai,China",
+        "destination_port": "CNSHA",
+    },
+    "Hazelnuts": {
+        "route": "Trabzon to Rotterdam",
+        "origin": "Trabzon,Turkey",
+        "origin_port": "TRTRB",
         "destination": "Rotterdam,Netherlands",
         "destination_port": "NLRTM",
+    },
+    "Olive Oil": {
+        "route": "Izmir to New York",
+        "origin": "Izmir,Turkey",
+        "origin_port": "TRIZM",
+        "destination": "NewYork,NY",
+        "destination_port": "USNYC",
     },
 }
 
@@ -82,10 +102,17 @@ async def _fetch_shipping_rate(commodity: str, route_config: dict[str, str]) -> 
             elif price_from is not None:
                 rate_usd = round(float(price_from), 2)
 
+        origin_coords = PORT_COORDINATES.get(route_config["origin_port"])
+        dest_coords = PORT_COORDINATES.get(route_config["destination_port"])
+
         return ShippingRate(
             route=route_config["route"],
             origin_port=route_config["origin_port"],
             destination_port=route_config["destination_port"],
+            origin_lat=origin_coords[0] if origin_coords else None,
+            origin_lon=origin_coords[1] if origin_coords else None,
+            destination_lat=dest_coords[0] if dest_coords else None,
+            destination_lon=dest_coords[1] if dest_coords else None,
             rate_usd=rate_usd,
             container_type="40ft",
             source="freightos",
@@ -93,10 +120,17 @@ async def _fetch_shipping_rate(commodity: str, route_config: dict[str, str]) -> 
 
     except Exception:
         logger.exception("Failed to fetch shipping rate for %s", commodity)
+        origin_coords = PORT_COORDINATES.get(route_config["origin_port"])
+        dest_coords = PORT_COORDINATES.get(route_config["destination_port"])
+
         return ShippingRate(
             route=route_config["route"],
             origin_port=route_config["origin_port"],
             destination_port=route_config["destination_port"],
+            origin_lat=origin_coords[0] if origin_coords else None,
+            origin_lon=origin_coords[1] if origin_coords else None,
+            destination_lat=dest_coords[0] if dest_coords else None,
+            destination_lon=dest_coords[1] if dest_coords else None,
             rate_usd=None,
             container_type="40ft",
             source="freightos",

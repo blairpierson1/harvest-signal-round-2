@@ -76,6 +76,10 @@ class ShippingRate(BaseModel):
     route: str
     origin_port: str
     destination_port: str
+    origin_lat: float | None = None
+    origin_lon: float | None = None
+    destination_lat: float | None = None
+    destination_lon: float | None = None
     rate_usd: float | None = None
     container_type: str = "40ft"
     source: str = "freightos"

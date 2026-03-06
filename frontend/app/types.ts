@@ -58,6 +58,10 @@ export interface ShippingRate {
   route: string;
   origin_port: string;
   destination_port: string;
+  origin_lat: number | null;
+  origin_lon: number | null;
+  destination_lat: number | null;
+  destination_lon: number | null;
   rate_usd: number | null;
   container_type: string;
   source: string;

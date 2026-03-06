@@ -1,33 +1,36 @@
-"""Signal generation logic for Middle East commodities based on weather data."""
+"""Signal generation logic for soft commodities based on weather data."""
 
 from __future__ import annotations
 
 from app.models import Signal, Confidence, ProducerCountry, WeatherRisk
 
 
-# Thresholds for signal generation - Middle East commodities
+# Thresholds for signal generation - all six commodities
 DROUGHT_THRESHOLDS: dict[str, dict[str, float]] = {
-    "Pistachios": {"precip_low": 0.3, "temp_high": 40.0, "humidity_low": 20.0},
-    "Figs": {"precip_low": 0.5, "temp_high": 38.0, "humidity_low": 25.0},
-    "Olives": {"precip_low": 0.6, "temp_high": 36.0, "humidity_low": 25.0},
+    "Pistachios": {"precip_low": 0.3, "temp_high": 38.0, "humidity_low": 20.0},
     "Dates": {"precip_low": 0.1, "temp_high": 48.0, "humidity_low": 15.0},
-    "Citrus": {"precip_low": 0.6, "temp_high": 35.0, "humidity_low": 30.0},
+    "Saffron": {"precip_low": 0.5, "temp_high": 30.0, "humidity_low": 25.0},
+    "Cotton": {"precip_low": 0.5, "temp_high": 40.0, "humidity_low": 25.0},
+    "Hazelnuts": {"precip_low": 2.0, "temp_high": 32.0, "humidity_low": 40.0},
+    "Olive Oil": {"precip_low": 0.5, "temp_high": 38.0, "humidity_low": 25.0},
 }
 
 FLOOD_THRESHOLDS: dict[str, dict[str, float]] = {
     "Pistachios": {"precip_high": 8.0, "humidity_high": 80.0},
-    "Figs": {"precip_high": 10.0, "humidity_high": 85.0},
-    "Olives": {"precip_high": 12.0, "humidity_high": 85.0},
     "Dates": {"precip_high": 5.0, "humidity_high": 75.0},
-    "Citrus": {"precip_high": 12.0, "humidity_high": 88.0},
+    "Saffron": {"precip_high": 8.0, "humidity_high": 82.0},
+    "Cotton": {"precip_high": 12.0, "humidity_high": 85.0},
+    "Hazelnuts": {"precip_high": 15.0, "humidity_high": 90.0},
+    "Olive Oil": {"precip_high": 10.0, "humidity_high": 85.0},
 }
 
 HEAT_STRESS_THRESHOLDS: dict[str, float] = {
-    "Pistachios": 44.0,
-    "Figs": 42.0,
-    "Olives": 40.0,
+    "Pistachios": 42.0,
     "Dates": 50.0,
-    "Citrus": 38.0,
+    "Saffron": 35.0,
+    "Cotton": 44.0,
+    "Hazelnuts": 36.0,
+    "Olive Oil": 42.0,
 }
 
 
@@ -222,7 +225,7 @@ def _apply_producer_boost(
         rationale = (
             f"Adverse weather across key {commodity.lower()} producing countries "
             f"({', '.join(p.country for p in alert_countries)}) covering "
-            f"{alert_share:.0f}% of regional output signals supply-side risk."
+            f"{alert_share:.0f}% of global output signals supply-side risk."
         )
     elif stressed_share >= 20 or (len(watch_countries) >= 2 and watch_share >= 10):
         worst = max(
@@ -233,7 +236,7 @@ def _apply_producer_boost(
         key_driver = f"Weather stress in {worst.country} ({worst.risk_detail})"
         rationale = (
             f"Weather watch/alert conditions across {commodity.lower()} producing "
-            f"countries covering {stressed_share:.0f}% of regional output suggest "
+            f"countries covering {stressed_share:.0f}% of global output suggest "
             f"emerging supply risk."
         )
 
