@@ -22,6 +22,7 @@ ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",
 # ---------------------------------------------------------------------------
 API_KEY = os.getenv("API_KEY") or None
 DISABLE_AUTH = os.getenv("DISABLE_AUTH", "").lower() == "true"
+TRUSTED_PROXY = os.getenv("TRUSTED_PROXY", "").lower() == "true"
 
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
@@ -66,10 +67,11 @@ async def verify_api_key(
 
 def _get_real_ip(request: Request) -> str:
     """Extract client IP, preferring X-Forwarded-For behind a trusted proxy."""
-    forwarded = request.headers.get("X-Forwarded-For")
-    if forwarded:
-        # Take the first (leftmost) IP which is the original client
-        return forwarded.split(",")[0].strip()
+    if TRUSTED_PROXY:
+        forwarded = request.headers.get("X-Forwarded-For")
+        if forwarded:
+            # Take the first (leftmost) IP which is the original client
+            return forwarded.split(",")[0].strip()
     return get_remote_address(request)
 
 

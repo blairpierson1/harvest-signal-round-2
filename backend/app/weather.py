@@ -120,7 +120,7 @@ async def _fetch_single_region(region: dict) -> dict:
             "longitude": region["longitude"],
             **parsed,
         }
-    except (httpx.HTTPError, httpx.TimeoutException, KeyError, ValueError):
+    except (httpx.HTTPError, httpx.TimeoutException, KeyError, ValueError, TypeError, AttributeError):
         logger.exception("Failed to fetch weather data, using fallback")
         return {
             "region_name": region["region_name"],
