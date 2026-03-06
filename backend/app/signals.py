@@ -7,12 +7,12 @@ from app.models import Signal, Confidence, ProducerCountry, WeatherRisk
 
 # Thresholds for signal generation - all six commodities
 DROUGHT_THRESHOLDS: dict[str, dict[str, float]] = {
-    "Pistachios": {"precip_low": 0.3, "temp_high": 38.0, "humidity_low": 20.0},
-    "Dates": {"precip_low": 0.1, "temp_high": 48.0, "humidity_low": 15.0},
-    "Saffron": {"precip_low": 0.5, "temp_high": 30.0, "humidity_low": 25.0},
-    "Cotton": {"precip_low": 0.5, "temp_high": 40.0, "humidity_low": 25.0},
+    "Pistachios": {"precip_low": 0.15, "temp_high": 40.0, "humidity_low": 15.0},
+    "Dates": {"precip_low": 0.05, "temp_high": 50.0, "humidity_low": 10.0},
+    "Saffron": {"precip_low": 0.3, "temp_high": 32.0, "humidity_low": 20.0},
+    "Cotton": {"precip_low": 0.3, "temp_high": 42.0, "humidity_low": 20.0},
     "Hazelnuts": {"precip_low": 2.0, "temp_high": 32.0, "humidity_low": 40.0},
-    "Olive Oil": {"precip_low": 0.5, "temp_high": 38.0, "humidity_low": 25.0},
+    "Olive Oil": {"precip_low": 0.3, "temp_high": 40.0, "humidity_low": 20.0},
 }
 
 FLOOD_THRESHOLDS: dict[str, dict[str, float]] = {
@@ -159,7 +159,7 @@ def generate_commodity_signal(
         )
         confidence = Confidence.HIGH if total_flood >= 6 else Confidence.MEDIUM
 
-    elif total_drought >= 3:
+    elif total_drought >= 4:
         signal = Signal.BULLISH
         driver_region = max_drought_region
         key_driver = f"Dry spell in {driver_region['region_name']}, {driver_region['country']}"
@@ -217,17 +217,17 @@ def _apply_producer_boost(
     watch_share = sum(p.share_percent for p in watch_countries)
     stressed_share = alert_share + watch_share
 
-    if alert_share >= 15 or len(alert_countries) >= 2:
+    if alert_share >= 25 or len(alert_countries) >= 3:
         worst = max(alert_countries, key=lambda p: p.share_percent)
         signal = Signal.BULLISH
-        confidence = Confidence.MEDIUM if alert_share >= 25 else Confidence.LOW
+        confidence = Confidence.MEDIUM if alert_share >= 40 else Confidence.LOW
         key_driver = f"Weather alert in {worst.country} ({worst.risk_detail})"
         rationale = (
             f"Adverse weather across key {commodity.lower()} producing countries "
             f"({', '.join(p.country for p in alert_countries)}) covering "
             f"{alert_share:.0f}% of global output signals supply-side risk."
         )
-    elif stressed_share >= 20 or (len(watch_countries) >= 2 and watch_share >= 10):
+    elif stressed_share >= 40 or (len(watch_countries) >= 3 and watch_share >= 20):
         worst = max(
             watch_countries + alert_countries, key=lambda p: p.share_percent
         )
