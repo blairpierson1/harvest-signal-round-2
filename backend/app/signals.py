@@ -222,7 +222,7 @@ def _apply_producer_boost(
         rationale = (
             f"Adverse weather across key {commodity.lower()} producing countries "
             f"({', '.join(p.country for p in alert_countries)}) covering "
-            f"{alert_share:.0f}% of global output signals supply-side risk."
+            f"{alert_share:.0f}% of regional output signals supply-side risk."
         )
     elif stressed_share >= 20 or (len(watch_countries) >= 2 and watch_share >= 10):
         worst = max(
@@ -233,7 +233,7 @@ def _apply_producer_boost(
         key_driver = f"Weather stress in {worst.country} ({worst.risk_detail})"
         rationale = (
             f"Weather watch/alert conditions across {commodity.lower()} producing "
-            f"countries covering {stressed_share:.0f}% of global output suggest "
+            f"countries covering {stressed_share:.0f}% of regional output suggest "
             f"emerging supply risk."
         )
 

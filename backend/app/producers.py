@@ -140,11 +140,11 @@ async def _fetch_single_producer(commodity: str, config: dict) -> ProducerCountr
     except Exception:
         logger.exception("Failed to fetch producer data, using fallback")
         weather = {
-            "temperature_avg": 25.0,
-            "temperature_max": 32.0,
-            "precipitation_sum": 20.0,
-            "precipitation_daily_avg": 2.9,
-            "relative_humidity": 70.0,
+            "temperature_avg": 30.0,
+            "temperature_max": 38.0,
+            "precipitation_sum": 3.5,
+            "precipitation_daily_avg": 0.5,
+            "relative_humidity": 35.0,
         }
 
     risk, detail = _classify_risk(commodity, weather)

@@ -17,7 +17,7 @@ COMMODITY_KEYWORDS: dict[str, str] = {
     "Pistachios": "pistachio commodity price middle east",
     "Figs": "fig commodity price middle east",
     "Olives": "olive oil commodity price middle east",
-    "Dates": "dates commodity price middle east",
+    "Dates": "date fruit commodity price middle east",
     "Citrus": "citrus commodity price middle east",
 }
 
