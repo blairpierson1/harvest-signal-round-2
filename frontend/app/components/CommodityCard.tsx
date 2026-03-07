@@ -8,6 +8,7 @@ import PriceTicker from "./PriceTicker";
 import SparklineChart from "./SparklineChart";
 import RegionDetail from "./RegionDetail";
 import ProducerCountries from "./ProducerCountries";
+import InvestmentExposure from "./InvestmentExposure";
 
 interface CommodityCardProps {
   data: CommoditySignal;
@@ -98,6 +99,11 @@ export default function CommodityCard({ data }: CommodityCardProps) {
               {data.forecast.description}
             </p>
           </div>
+        )}
+
+        {/* Investment Exposure */}
+        {data.investment_securities && data.investment_securities.length > 0 && (
+          <InvestmentExposure securities={data.investment_securities} />
         )}
 
         {/* Shipping Rate */}

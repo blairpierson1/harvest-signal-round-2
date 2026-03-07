@@ -54,6 +54,16 @@ export interface ForecastDirection {
   description: string;
 }
 
+export interface InvestmentSecurity {
+  ticker: string;
+  name: string;
+  type: string;
+  description: string;
+  yahoo_finance_symbol: string | null;
+  current_price: number | null;
+  change_percent: number | null;
+}
+
 export interface ShippingRate {
   route: string;
   origin_port: string;
@@ -80,6 +90,7 @@ export interface CommoditySignal {
   news: NewsHeadline[];
   forecast: ForecastDirection;
   shipping: ShippingRate | null;
+  investment_securities: InvestmentSecurity[];
   last_updated: string;
 }
 
