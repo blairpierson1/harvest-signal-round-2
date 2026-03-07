@@ -72,6 +72,16 @@ class ForecastDirection(BaseModel):
     description: str
 
 
+class InvestmentSecurity(BaseModel):
+    ticker: str
+    name: str
+    type: str
+    description: str
+    yahoo_finance_symbol: str | None = None
+    current_price: float | None = None
+    change_percent: float | None = None
+
+
 class ShippingRate(BaseModel):
     route: str
     origin_port: str
@@ -100,6 +110,7 @@ class CommoditySignal(BaseModel):
         label="N/A", description="Insufficient data"
     )
     shipping: ShippingRate | None = None
+    investment_securities: list[InvestmentSecurity] = []
     last_updated: str
 
 
